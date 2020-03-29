@@ -186,9 +186,28 @@ public class FileSystem {
 	
 	
 	
+	/**********************************************************
+     * creationTime
+     **********************************************************/
+
+public FileSystem getRoot() {
+	if (dir == null) {
+		return this;
+	}
+	else {
+		return dir;
+	}
+}
+
+public void makeRoot() {
+	setDir(null);
+	}
 	
 	
+public void move(FileSystem dir) {
+	setDir(dir);
 	
+}
 	
 	
 
