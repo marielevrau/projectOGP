@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/Jérôme D&apos;hulst/Documents/2de_Bachelor_Burgerlij_ Ingenieur_Kulak/Semester 2/Objectgericht_Programmeren/Applicaties/AnnotationsDoclets.jar/AnnotationsDoclets.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://www.cs.kuleuven.be/books/OOPWithJava/doc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
