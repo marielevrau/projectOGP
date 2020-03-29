@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Directory extends FileSystem{
 	
@@ -7,16 +10,14 @@ public class Directory extends FileSystem{
 		
 	}
 	
+	List<String> list = new ArrayList<String>();
+	
 	public Directory(String name) {
 		this(name,null,true);
 	}
 	
 	public Directory(FileSystem dir, String name) {
 		this(name,dir,true);
-	}
-	
-	public boolean isSubMap() {
-		return (this.getDir() != null);
 	}
 	
 	public String getItemAt(int index) {
@@ -27,25 +28,45 @@ public class Directory extends FileSystem{
 		return ;
 	}
 	
-	public boolean exists() {
-		return
+	public boolean exists(String name) {
+		return this.list.contains(name.toLowerCase());
 	}
 	
 	public int getIndexOf(String name) {
-		return
+		int index = 0;
+		for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == name) {
+            		break;
+            		
+            }
+            index = index + 1;
+        }
+		return index;
+		
 	}
 	
 	public int getNbItems() {
-		return
+		return this.list.size();
 	}
 	
 	public boolean hasAsItem(String name) {
-		return
+		return this.list.contains(name);
 	}
 	
-	public boolean isDirectOrIndirectSubdirectoryOf(String name) {
-		return
+	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
+		return directory.list.contains(this.getName());
+		
 	}
+	
+    /**********************************************************
+     * modificationTime
+     **********************************************************/
+	
+	public Date getModificationTime() {
+		return super.getModificationTime();
+	}
+	
+
 	
 	public void makeRoot() {
 		super.makeRoot();
