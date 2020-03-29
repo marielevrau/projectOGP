@@ -2,46 +2,65 @@
 public class Directory extends FileSystem{
 	
 	
-	public Directory(FileSystem dir, String name, Boolean writable) {
-		super(dir,name,writable);
+	public Directory(String name, FileSystem dir,  Boolean writable) {
+		super(name,dir,writable);
 		
 	}
 	
 	public Directory(String name) {
-		this(null,name,true);
+		this(name,null,true);
 	}
 	
 	public Directory(FileSystem dir, String name) {
-		this(dir,name,true);
+		this(name,dir,true);
 	}
 	
-	
-	public int getItemAt() {
-		
+	public boolean isSubMap() {
+		return (this.getDir() != null);
 	}
 	
-	public String getItem() {
-		
+	public String getItemAt(int index) {
+		return ;
+	}
+	
+	public String getItem(String name) {
+		return ;
 	}
 	
 	public boolean exists() {
-		
+		return
 	}
 	
-	public int getIndexOf() {
-		
+	public int getIndexOf(String name) {
+		return
 	}
 	
 	public int getNbItems() {
+		return
+	}
+	
+	public boolean hasAsItem(String name) {
+		return
+	}
+	
+	public boolean isDirectOrIndirectSubdirectoryOf(String name) {
+		return
+	}
+	
+	public void makeRoot() {
+		super.makeRoot();
 		
 	}
 	
-	public boolean hasAsItem() {
+	public void move(FileSystem dir) {
+		super.move(dir);
+	}
+	
+	public FileSystem getRoot() {
+		return super.getRoot();
 		
 	}
 	
-	public boolean isDirectOrIndirectSubdirectoryOf() {
-		
-	}
+	
 	
 }
