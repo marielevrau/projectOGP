@@ -5,6 +5,10 @@ import java.util.List;
 public class Directory extends FileSystem{
 	
 	
+	/**********************************************************
+     * constructor
+     **********************************************************/
+	
 	public Directory(String name, Directory dir,  Boolean writable) {
 		super(name,dir,writable);
 		
@@ -17,9 +21,14 @@ public class Directory extends FileSystem{
 		this(name,null,true);
 	}
 	
-	public Directory(FileSystem dir, String name) {
+	public Directory(Directory dir, String name) {
 		this(name,dir,true);
 	}
+	
+	
+	/**********************************************************
+     * list of subfiles and sub-directories
+     **********************************************************/
 	
 	public String getItemAt(int index) {
 		return ;

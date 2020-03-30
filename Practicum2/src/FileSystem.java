@@ -26,8 +26,6 @@ public class FileSystem {
 	
 	
 	
-	
-	
 	public static boolean isValidName(String name) {
 		return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
 	}
@@ -48,7 +46,7 @@ public class FileSystem {
 	
 	
 	private static String getDefaultName() {
-		return "new_file";
+		return "new_fileSystem";
 	}
 	
 	
@@ -57,9 +55,6 @@ public class FileSystem {
 	public String getName() {
 		return name;
 	}
-	
-	
-	
 	
 	
 	
@@ -96,7 +91,7 @@ public class FileSystem {
 	
 	
 	/**********************************************************
-     * dir
+     * directory reference
      **********************************************************/
 	private FileSystem dir = null;
 	
@@ -109,6 +104,12 @@ public class FileSystem {
 	}
 	
 	
+	
+	/*
+	public static boolean isValidFileSystem(FileSystem dir) {
+		return ()
+	}
+	*/
 	/**********************************************************
      * creationTime
      **********************************************************/
