@@ -5,8 +5,9 @@ import java.util.List;
 public class Directory extends FileSystem{
 	
 	
-	public Directory(String name, FileSystem dir,  Boolean writable) {
+	public Directory(String name, Directory dir,  Boolean writable) {
 		super(name,dir,writable);
+		
 		
 	}
 	
