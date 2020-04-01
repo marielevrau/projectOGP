@@ -9,7 +9,7 @@ public class FileSystem {
 	
 	
 	
-	public FileSystem(String name, FileSystem dir, Boolean writable) {
+	public FileSystem(String name, Directory dir, Boolean writable) {
 		setName(name);
 		setWritable(writable);
 		setDir(dir);
@@ -93,9 +93,9 @@ public class FileSystem {
 	/**********************************************************
      * directory reference
      **********************************************************/
-	private FileSystem dir = null;
+	private Directory dir = null;
 	
-	private void setDir(FileSystem dir) {
+	private void setDir(Directory dir) {
 		this.dir = dir;
 	}
 	
@@ -188,7 +188,7 @@ public class FileSystem {
 	
 	
 	/**********************************************************
-     * creationTime
+     * Root and move
      **********************************************************/
 
 public FileSystem getRoot() {
@@ -200,16 +200,38 @@ public FileSystem getRoot() {
 	}
 }
 
+
+
+
+
+
 public void makeRoot() {
 	setDir(null);
 	}
 	
+
+
+
+
+
+
 	
-public void move(FileSystem dir) {
-	setDir(dir);
-	
-}
-	
+public void move(Directory dir) throws FileNotWritableException, AlreadyInListException{
+		if (dir.isWritable()) {
+			if (dir.exists(this.getName())) {
+				throw new AlreadyInListException(this);
+			}
+			else {
+			/* hier komt een functie die het object alfabetisch correct toevoegt aan de lijst*/
+			}
+		}	
 	
 
-}
+		else {
+			throw new FileNotWritableException(dir);
+			}
+	}
+
+		
+	
+

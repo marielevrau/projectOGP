@@ -1,4 +1,7 @@
 import be.kuleuven.cs.som.annotate.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import java.util.Date;
 
@@ -19,7 +22,7 @@ import java.util.Date;
  * 
  * @note		See Coding Rule 48 for more info on the encapsulation of class invariants.
  */
-public class File {
+public class File extends FileSystem {
 
     /**********************************************************
      * Constructors
@@ -48,10 +51,9 @@ public class File {
      * @post    The new file has no time of last modification.
      *          | new.getModificationTime() == null
      */
-	public File(String name, int size, boolean writable) {
-        setName(name);
+	public File(Directory dir, String name,int size, boolean writable, String type) {
+        super(name,dir,writable);
         setSize(size);
-        setWritable(writable);
     }
 
     /**
@@ -64,107 +66,26 @@ public class File {
      *         | this(name,0,true)
      */
     public File(String name) {
-        this(name,0,true);
+        this(null,name,0,true,"txt");
     }
     
     
     
-    /**********************************************************
-     * name - total programming
-     **********************************************************/
-
-    /**
-     * Variable referencing the name of this file.
-     * @note		See Coding Rule 32, for information on the initialization of fields.
-     */
-    private String name = null;
-
-    /**
-     * Return the name of this file.
-     * @note		See Coding Rule 19 for the Basic annotation.
-     */
-    @Raw @Basic 
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Check whether the given name is a legal name for a file.
-     * 
-     * @param  	name
-     *			The name to be checked
-     * @return	True if the given string is effective, not
-     * 			empty and consisting only of letters, digits, dots,
-     * 			hyphens and underscores; false otherwise.
-     * 			| result ==
-     * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
-     */
-    public static boolean isValidName(String name) {
-        return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
+    public File(String name, String type) {
+    	this(null,name,0,true,type);
     }
     
-    /**
-     * Set the name of this file to the given name.
-     *
-     * @param   name
-     * 			The new name for this file.
-     * @post    If the given name is valid, the name of
-     *          this file is set to the given name,
-     *          otherwise the name of the file is set to a valid name (the default).
-     *          | if (isValidName(name))
-     *          |      then new.getName().equals(name)
-     *          |      else new.getName().equals(getDefaultName())
-     */
-    @Raw @Model 
-    private void setName(String name) {
-        if (isValidName(name)) {
-        		this.name = name;
-        } else {
-        		this.name = getDefaultName();
-        }
+    
+    public File(String name, int size, boolean writable, String type) {
+    	this(null,name,size,writable,type);
     }
     
-    /**
-     * Return the name for a new file which is to be used when the
-     * given name is not valid.
-     *
-     * @return   A valid file name.
-     *         | isValidName(result)
-     */
-    @Model
-    private static String getDefaultName() {
-        return "new_file";
+    
+    public File(Directory dir, String name, String type) {
+    	this(dir,name,0,true,type);
     }
-
-    /**
-     * Change the name of this file to the given name.
-     *
-     * @param	name
-     * 			The new name for this file.
-     * @effect  The name of this file is set to the given name, 
-     * 			if this is a valid name and the file is writable, 
-     * 			otherwise there is no change.
-     * 			| if (isValidName(name) && isWritable())
-     *          | then setName(name)
-     * @effect  If the name is valid and the file is writable, the modification time 
-     * 			of this file is updated.
-     *          | if (isValidName(name) && isWritable())
-     *          | then setModificationTime()
-     * @throws  FileNotWritableException(this)
-     *          This file is not writable
-     *          | ! isWritable() 
-     */
-    public void changeName(String name) throws FileNotWritableException {
-        if (isWritable()) {
-            if (isValidName(name)){
-            	setName(name);
-                setModificationTime();
-            }
-        } else {
-            throw new FileNotWritableException(this);
-        }
-    }
-
+    
+    
     
     
     /**********************************************************
@@ -407,36 +328,58 @@ public class File {
     }
 
     
+   
     
     /**********************************************************
-     * writable
+     * type
      **********************************************************/
-   
-    /**
-     * Variable registering whether or not this file is writable.
-     */
-    private boolean isWritable = true;
     
-    /**
-     * Check whether this file is writable.
-     */
-    @Raw @Basic
-    public boolean isWritable() {
-        return isWritable;
-    }
+    
+    public static List<String> typeList = new ArrayList<String>(Arrays.asList("txt","java","pdf"));
 
-    /**
-     * Set the writability of this file to the given writability.
-     *
-     * @param isWritable
-     *        The new writability
-     * @post  The given writability is registered as the new writability
-     *        for this file.
-     *        | new.isWritable() == isWritable
-     */
-    @Raw 
-    public void setWritable(boolean isWritable) {
-        this.isWritable = isWritable;
+    
+    public String type = null;
+    
+    
+    private void setType(String type) throws IllegalTypeException{
+    	if (isValidType(type)) {
+    		this.type = type;
+    	}
+    	else {
+    		throw new IllegalTypeException(this);
+    		
+    	}
+    	
     }
+    
+    
+    public boolean isValidType(String type) {
+    	for (int i = 0;i < typeList.size(); i++) {
+    		if (type == typeList.get(i)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

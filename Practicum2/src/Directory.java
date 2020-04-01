@@ -15,11 +15,18 @@ public class Directory extends FileSystem{
 		
 	}
 	
-	List<String> list = new ArrayList<String>();
+	
 	
 	public Directory(String name) {
 		this(name,null,true);
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public Directory(Directory dir, String name) {
 		this(name,dir,true);
@@ -29,44 +36,88 @@ public class Directory extends FileSystem{
 	/**********************************************************
      * list of subfiles and sub-directories
      **********************************************************/
+	public List<FileSystem> list = new ArrayList<FileSystem>();
 	
-	public String getItemAt(int index) {
-		return ;
+	
+	public FileSystem getItemAt(int index) {
+		return list.get(index-1);
 	}
 	
-	public String getItem(String name) {
-		return ;
+	
+	
+	
+	public FileSystem getItem(String name) {
+		for (int i = 0;i<list.size();i++) {
+			FileSystem FileDir = list.get(i);
+			if (FileDir.getName()== name) {
+				return  FileDir;
+			}
+		}
+		return null;
 	}
+	
+	
+	
+	
+	
 	
 	public boolean exists(String name) {
-		return this.list.contains(name.toLowerCase());
+		for (int i = 0; i < list.size();i++) {
+			if (list.get(i).getName()==name) {
+				return true;
+			}
+		}
+		return false;
 	}
+	
+	
+	
+	
+	
+	
 	
 	public int getIndexOf(String name) {
 		int index = 0;
 		for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) == name) {
-            		break;
-            		
+            if (list.get(i).getName() == name) {
+            		index = i;
+            	break;
             }
-            index = index + 1;
         }
 		return index;
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
 	public int getNbItems() {
 		return this.list.size();
 	}
 	
-	public boolean hasAsItem(String name) {
-		return this.list.contains(name);
+	
+	
+	
+	
+	public boolean hasAsItem(FileSystem FileDir) {
+		return this.list.contains(FileDir);
 	}
 	
+	
+	
+	
+	
+	
 	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
-		return directory.list.contains(this.getName());
+		return directory.list.contains(this);
 		
 	}
+	
+	
 	
     /**********************************************************
      * modificationTime
@@ -78,19 +129,7 @@ public class Directory extends FileSystem{
 	
 
 	
-	public void makeRoot() {
-		super.makeRoot();
-		
-	}
 	
-	public void move(FileSystem dir) {
-		super.move(dir);
-	}
-	
-	public FileSystem getRoot() {
-		return super.getRoot();
-		
-	}
 	
 	
 	
