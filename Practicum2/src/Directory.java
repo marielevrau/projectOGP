@@ -46,14 +46,18 @@ public class Directory extends FileSystem{
 	
 	
 	
-	public FileSystem getItem(String name) {
+	public FileSystem getItem(String name) throws NotInListException {
+		if (this.exists(name)) {
 		for (int i = 0;i<list.size();i++) {
 			FileSystem FileDir = list.get(i);
 			if (FileDir.getName()== name) {
 				return  FileDir;
 			}
 		}
-		return null;
+		}
+		else {
+			throw new NotInListException(this);
+		}
 	}
 	
 	
@@ -84,7 +88,7 @@ public class Directory extends FileSystem{
             	break;
             }
         }
-		return index;
+		return index + 1;
 		
 	}
 	
@@ -111,11 +115,12 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
+	/* exception voor als het een root directory is of een directory die geen subdirectory is*/
 	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
 		return directory.list.contains(this);
 		
 	}
+	
 	
 	
 	

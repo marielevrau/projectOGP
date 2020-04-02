@@ -362,6 +362,9 @@ public class File extends FileSystem {
     	return false;
     }
     
+    public String getType() {
+    	return type;
+    }
     
     
     
