@@ -212,10 +212,13 @@ public void makeRoot() {
 	}
 	
 
+public int seekAlphabeticPosition(String string) {
 
+}
 
-
-
+public Directory insertNewIntoDirectory(int position, String s) {
+	
+}
 
 	
 public void move(Directory dir) throws FileNotWritableException, AlreadyInListException{
@@ -224,7 +227,9 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 				throw new AlreadyInListException(this);
 			}
 			else {
-			/* hier komt een functie die het object alfabetisch correct toevoegt aan de lijst*/
+				int pos = dir.seekAlphabeticPosition(this.getName());
+				dir.insertNewIntoDirectory(pos, this.getName());
+				setModificationTime();
 			}
 		}	
 	
