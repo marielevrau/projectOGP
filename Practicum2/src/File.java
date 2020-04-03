@@ -369,8 +369,16 @@ public class File extends FileSystem {
     
     
     
+    /**********************************************************
+     * delete
+     **********************************************************/
     
-    
+    @Override
+    public void delete() {
+    	Directory ref = this.getDir();
+    	ref.remove(this);
+    	this.addToBin();
+    }
     
     
     

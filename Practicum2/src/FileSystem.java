@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
@@ -95,11 +97,11 @@ public class FileSystem {
      **********************************************************/
 	private Directory dir = null;
 	
-	private void setDir(Directory dir) {
+	void setDir(Directory dir) {
 		this.dir = dir;
 	}
 	
-	public FileSystem getDir() {
+	public Directory getDir() {
 		return dir;
 	}
 	
@@ -233,5 +235,37 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 	}
 
 		
+/**********************************************************
+ * delete
+ **********************************************************/
+
+public static List<FileSystem> bin = new ArrayList<FileSystem>();
+
+public List<FileSystem> getBin(){
+	return bin;
+}
+
+public void addToBin() {
+	bin.add(this);
+}
+
+
+
+public void delete() {
 	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 

@@ -38,6 +38,10 @@ public class Directory extends FileSystem{
      **********************************************************/
 	public List<FileSystem> list = new ArrayList<FileSystem>();
 	
+	public List<FileSystem> getList(){
+		return list;
+	}
+	
 	
 	public FileSystem getItemAt(int index) {
 		return list.get(index-1);
@@ -121,8 +125,34 @@ public class Directory extends FileSystem{
 		
 	}
 	
+	/**********************************************************
+     * remove
+     **********************************************************/
+	
+	public void remove(FileSystem fileS) {
+		list.remove(fileS);
+		fileS.setDir(null);
+	}
+	
+	/**********************************************************
+     * delete
+     **********************************************************/
+	@Override
+	public void delete() throws DirListNotEmptyException {
+		if (this.isListEmpty()) {
+			Directory ref = this.getDir();
+			ref.remove(this);
+			this.addToBin();
+		}
+		else{ 
+			throw new DirListNotEmptyException(this);
+		}
+	}
 	
 	
+	public boolean isListEmpty() {
+		return this.getList().isEmpty();
+	}
 	
     /**********************************************************
      * modificationTime
