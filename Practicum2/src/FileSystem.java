@@ -210,16 +210,33 @@ public FileSystem getRoot() {
 public void makeRoot() {
 	setDir(null);
 	}
-	
+
+
 
 public int seekAlphabeticPosition(String string) {
-
-}
-
-public Directory insertNewIntoDirectory(int position, String s) {
+	List<FileSystem> list = this.getDir().getList();
+	int pos = 0;
+	for(int i = 0; i < list.size(); i++) {
+		if(string.charAt(0) < list.get(i).getName().charAt(0)) {
+			pos = i; 
+		}
+		if(string.charAt(0) == list.get(i).getName().charAt(0)) {
+			for(int j = 1; j < list.get(i).getName().length();j++) {
+				if(string.charAt(j) < list.get(i).getName().charAt(j)) {
+					pos = i; 
+				}
+			}
+		}
+	}
 	
+	return pos; 
 }
 
+public Directory insertNewIntoDirectory(int position, FileSystem file) {
+	List<FileSystem> list = this.getDir().getList(); 
+	list.add(position, file);
+}
+ 
 	
 public void move(Directory dir) throws FileNotWritableException, AlreadyInListException{
 		if (dir.isWritable()) {
@@ -228,7 +245,7 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 			}
 			else {
 				int pos = dir.seekAlphabeticPosition(this.getName());
-				dir.insertNewIntoDirectory(pos, this.getName());
+				dir.insertNewIntoDirectory(pos, this.name);
 				setModificationTime();
 			}
 		}	
