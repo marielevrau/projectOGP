@@ -43,8 +43,14 @@ public class Directory extends FileSystem{
 	}
 	
 	
-	public FileSystem getItemAt(int index) {
-		return list.get(index-1);
+	public FileSystem getItemAt(int index) throws IndexOutOfRangeException {
+		if ((index >= list.size()) || (list.size() == 0 )) {
+			throw new IndexOutOfRangeException(this);
+		}
+		else {
+			return list.get(index-1);
+		}
+		
 	}
 	
 	
