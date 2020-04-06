@@ -38,6 +38,19 @@ public class Directory extends FileSystem{
      **********************************************************/
 	public List<FileSystem> list = new ArrayList<FileSystem>();
 	
+	
+	
+	
+	public FileSystem sortListLexicograhpic(List<FileSystem> list, int l, int r){
+		if(l < r) {
+			int middle = (l + r) / 2;
+			FileSystem leftList = sortListLexicograhpic(list, l, middle);
+			FileSystem rightList = sortListLexicograhpic(list, middle + 1, r); 
+		}
+	}
+	
+	
+	 
 	public List<FileSystem> getList(){
 		return list;
 	}
