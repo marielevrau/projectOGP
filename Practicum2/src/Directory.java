@@ -71,16 +71,21 @@ public class Directory extends FileSystem{
 	
 	public FileSystem getItem(String name) throws NotInListException {
 		if (this.exists(name)) {
+			int index = 0;
 		for (int i = 0;i<list.size();i++) {
 			FileSystem FileDir = list.get(i);
 			if (FileDir.getName()== name) {
-				return  FileDir;
+				  break;
 			}
+			index = index +1;
+			
 		}
+			return list.get(index);
 		}
 		else {
 			throw new NotInListException(this);
 		}
+		
 	}
 	
 	
@@ -90,7 +95,7 @@ public class Directory extends FileSystem{
 	
 	public boolean exists(String name) {
 		for (int i = 0; i < list.size();i++) {
-			if (list.get(i).getName()==name) {
+			if ((list.get(i).getName()).toLowerCase() == name.toLowerCase()) {
 				return true;
 			}
 		}
@@ -103,21 +108,21 @@ public class Directory extends FileSystem{
 	
 	
 	
-	public int getIndexOf(String name) {
-		int index = 0;
-		for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName() == name) {
-            		index = i;
-            	break;
-            }
-        }
-		return index + 1;
+	public int getIndexOf(String name) throws NotInListException{
+		if (this.exists(name)) {
+			int index = 0;
+			for (int i = 0; i < list.size(); i++) {
+		        if (list.get(i).getName() == name) {
+		        		index = i;
+		        	break;
+		        }
+		    }
+			return index + 1;}
+		else {
+			throw new NotInListException(this);
+		}
 		
 	}
-	
-	
-	
-	
 	
 	
 	
@@ -130,8 +135,13 @@ public class Directory extends FileSystem{
 	
 	
 	
-	public boolean hasAsItem(FileSystem FileDir) {
-		return this.list.contains(FileDir);
+	public boolean hasAsItem(FileSystem FileDir) throws NotInListException {
+		if (this.list.contains(FileDir)) {
+			return true;
+		}
+		else {
+			throw new NotInListException(this);
+		}
 	}
 	
 	
@@ -139,8 +149,16 @@ public class Directory extends FileSystem{
 	
 	
 	/* exception voor als het een root directory is of een directory die geen subdirectory is*/
-	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) {
-		return directory.list.contains(this);
+	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) throws IsRootDirectoryException, NotDirectOrIndirectSubdirectoryException {
+		if(super.getRoot() == this) {
+			throw new IsRootDirectoryException(this);
+		} 
+		else if (super.getRoot() == directory){
+			return directory.list.contains(this);
+		}
+		else {
+			throw new NotDirectOrIndirectSubdirectoryException(this);  
+		}
 		
 	}
 	
@@ -148,9 +166,15 @@ public class Directory extends FileSystem{
      * remove
      **********************************************************/
 	
-	public void remove(FileSystem fileS) {
-		list.remove(fileS);
-		fileS.setDir(null);
+	public void remove(FileSystem fileS) throws NotInListException{
+		if (this.list.contains(fileS)) {
+			list.remove(fileS);
+			fileS.setDir(null);
+		}
+		else {
+			throw new NotInListException(this);
+		}
+
 	}
 	
 	/**********************************************************
