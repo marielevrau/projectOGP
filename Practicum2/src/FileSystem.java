@@ -60,7 +60,24 @@ public class FileSystem {
 	
 	
 	
-	
+	/**
+     * Change the name of this fileSystem to the given name.
+     *
+     * @param	name
+     * 			The new name for this fileSystem.
+     * @effect  The name of this fileSystem is set to the given name, 
+     * 			if this is a valid name and the fileSystem is writable, 
+     * 			otherwise there is no change.
+     * 			| if (isValidName(name) && isWritable())
+     *          | then setName(name)
+     * @effect  If the name is valid and the fileSystem is writable, the modification time 
+     * 			of this fileSystem is updated.
+     *          | if (isValidName(name) && isWritable())
+     *          | then setModificationTime()
+     * @throws  FileNotWritableException(this)
+     *          This fileSystem is not writable
+     *          | ! isWritable() 
+     */
 	
 	public void changeName(String name) throws FileNotWritableException{
 		if (isWritable()) {
@@ -120,7 +137,7 @@ public class FileSystem {
     private final Date creationTime = new Date();
    
     /**
-     * Return the time at which this file was created.
+     * Return the time at which this fileSystem was created.
      */
     @Raw @Basic @Immutable
     public Date getCreationTime() {
@@ -156,10 +173,12 @@ public class FileSystem {
     private Date modificationTime = null;
    
     /**
-     * Return the time at which this file was last modified, that is
-     * at which the name or size was last changed. If this file has
+     * Return the time at which this fileSystem was last modified, that is
+     * at which the name or size was last changed. If this fileSysteem has
      * not yet been modified after construction, null is returned.
      */
+    
+    /* !!!!!!!!!!!! specificatie hierboven 'at which the name or size was last changed' naam is zowel voor File als Directory, size enkel voor File, en delete() en move() enkel voor Directory? specifiek bij File of Directory zetten of hierboven ook nog eens vermelden??!!!!!! */
     @Raw @Basic
     public Date getModificationTime() {
         return modificationTime;
@@ -167,7 +186,7 @@ public class FileSystem {
 	
 	
     /**
-     * Set the modification time of this file to the current time.
+     * Set the modification time of this fileSystem to the current time.
      *
      * @post   The new modification time is effective.
      *         | new.getModificationTime() != null
@@ -179,13 +198,61 @@ public class FileSystem {
      *         | (new.getModificationTime().getTime() <=
      *         |                    (new System).currentTimeMillis())
      */
-    @Model 
-    private void setModificationTime() {
+    @Model
+	protected void setModificationTime() {
         modificationTime = new Date();
     }
+    
+    /**
+     * Check whether this fileSystem can have the given date as modification time.
+     *
+     * @param	date
+     * 			The date to check.
+     * @return 	True if and only if the given date is either not effective
+     * 			or if the given date lies between the creation time and the
+     * 			current time.
+     *         | result == (date == null) ||
+     *         | ( (date.getTime() >= getCreationTime().getTime()) &&
+     *         |   (date.getTime() <= System.currentTimeMillis())     )
+     */
+    public boolean canHaveAsModificationTime(Date date) {
+        return (date == null) ||
+               ( (date.getTime() >= getCreationTime().getTime()) &&
+                 (date.getTime() <= System.currentTimeMillis()) );
+    }
 
-	
-	
+    /**
+     * Return whether this fileSystem and the given other fileSystem have an
+     * overlapping use period.
+     *
+     * @param 	other
+     *        	The other fileSystem to compare with.
+     * @return 	False if the other fileSystem is not effective
+     * 			False if the prime object does not have a modification time
+     * 			False if the other fileSystem is effective, but does not have a modification time
+     * 			otherwise, true if and only if the open time intervals of this fileSystem and
+     * 			the other fileSystem overlap
+     *        	| if (other == null) then result == false else
+     *        	| if ((getModificationTime() == null)||
+     *        	|       other.getModificationTime() == null)
+     *        	|    then result == false
+     *        	|    else 
+     *        	| result ==
+     *        	| ! (getCreationTime().before(other.getCreationTime()) && 
+     *        	|	 getModificationTime().before(other.getCreationTime()) ) &&
+     *        	| ! (other.getCreationTime().before(getCreationTime()) && 
+     *        	|	 other.getModificationTime().before(getCreationTime()) )
+     */
+    public boolean hasOverlappingUsePeriod(FileSystem other) {
+        if (other == null) return false;
+        if(getModificationTime() == null || other.getModificationTime() == null) return false;
+        return ! (getCreationTime().before(other.getCreationTime()) && 
+        	      getModificationTime().before(other.getCreationTime()) ) &&
+        	   ! (other.getCreationTime().before(getCreationTime()) && 
+        	      other.getModificationTime().before(getCreationTime()) );
+    }
+
+   
 	
 	/**********************************************************
      * Root and move
@@ -244,7 +311,7 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 			else {
 				int pos = dir.seekAlphabeticPosition(this.getName());
 				dir.insertNewIntoDirectory(pos, this.name);
-				setModificationTime();
+				
 			}
 		}	
 	

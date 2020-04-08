@@ -161,6 +161,15 @@ public class Directory extends FileSystem{
 		}
 		
 	}
+	/**********************************************************
+     * Root and move
+     **********************************************************/
+	
+	public void move(Directory dir) {
+		setModificationTime();
+		super.move(dir);
+		
+	}
 	
 	/**********************************************************
      * remove
@@ -181,6 +190,7 @@ public class Directory extends FileSystem{
      * delete
      **********************************************************/
 	@Override
+	/*!!! setModificationTime() nog toevoegen aan functie delete(), heb ik nu nog niet gedaan want delete() ging jérome nog aanpassen!!!*/
 	public void delete() throws DirListNotEmptyException {
 		if (this.isListEmpty()) {
 			Directory ref = this.getDir();
