@@ -146,9 +146,6 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
-	
-	/* exception voor als het een root directory is of een directory die geen subdirectory is*/
 	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) throws IsRootDirectoryException, NotDirectOrIndirectSubdirectoryException {
 		if(super.getRoot() == this) {
 			throw new IsRootDirectoryException(this);
@@ -161,6 +158,7 @@ public class Directory extends FileSystem{
 		}
 		
 	}
+	
 	/**********************************************************
      * Root and move
      **********************************************************/
