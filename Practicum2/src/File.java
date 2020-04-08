@@ -8,14 +8,12 @@ import java.util.Date;
 /**
  * A class of files.
  *
- * @invar	Each file must have a properly spelled name.
- * 			| isValidName(getName())
+ * 
  * @invar	Each file must have a valid size.
  * 			| isValidSize(getSize())
- * @invar   Each file must have a valid creation time.
- *          | isValidCreationTime(getCreationTime())
- * @invar   Each file must have a valid modification time.
- *          | canHaveAsModificationTime(getModificationTime())
+ * @invar 	Each file must have a valid type.
+ * 			| isValidType(getType())
+ * 
  * @author  Mark Dreesen
  * @author  Tommy Messelis
  * @version 3.1
@@ -29,14 +27,19 @@ public class File extends FileSystem {
      **********************************************************/
 
     /**
-     * Initialize a new file with given name, size and writability.
-     *
+     * Initialize a new file with directory reference, name, size, writability and type.
+     * @param	dir
+     *			The directory where the new file is located.
      * @param  	name
      *         	The name of the new file.
      * @param  	size
      *         	The size of the new file.
      * @param  	writable
      *         	The writability of the new file.
+     * @param 	type
+     * 			The type of the new file.
+     * @effect	The directory reference is set to the given object.
+     * 			| setDir(dir)
      * @effect  The name of the file is set to the given name.
      * 			If the given name is not valid, a default name is set.
      *          | setName(name)
@@ -44,6 +47,8 @@ public class File extends FileSystem {
      * 			| setSize(size)
      * @effect	The writability is set to the given flag
      * 			| setWritable(writable)
+     * @effect	The type is set to the given type (must be valid)
+     * 			| setType(type)
      * @post    The new creation time of this file is initialized to some time during
      *          constructor execution.
      *          | (new.getCreationTime().getTime() >= System.currentTimeMillis()) &&
@@ -54,6 +59,7 @@ public class File extends FileSystem {
 	public File(Directory dir, String name,int size, boolean writable, String type) {
         super(name,dir,writable);
         setSize(size);
+        setType(type);
     }
 
     /**
@@ -62,12 +68,25 @@ public class File extends FileSystem {
      * @param   name
      *          The name of the new file.
      * @effect  This new file is initialized with the given name, a zero size
-     * 			and true writability
-     *         | this(name,0,true)
+     * 			,true writability, given directory reference and a default type "txt".
+     *         | this(null,name,0,true,'txt')
      */
     public File(String name) {
         this(null,name,0,true,"txt");
     }
+    
+    
+    /**
+     * Initialize a new file with the given name and type.
+     * @param 	name
+     * 			The name of the new file.
+     * @param 	type
+     * 			The type of the new file.
+     * @effect	This new file is initialized with a 'null' directory reference
+     * 			(meaning this is a root-file), a given name and a given type.
+     * 			|this(null,name,0,true,type)
+     * 			
+     */
     
     
     
@@ -76,11 +95,39 @@ public class File extends FileSystem {
     }
     
     
+    
+    /**
+     * Initialize a new file with the given name, size, writability and type.
+     * @param 	name
+     * 			The name of the new file.
+     * @param	size
+     * 			The size of the new file.
+     * @param   writable
+     * 			The writability of the new file.
+     * @param 	type
+     * 			The type of the new file.
+     * @effect	This new file is initialized with a given name, size, writability and type.
+     * 			|this(null,name,size,writable,type)
+     * 			
+     */
     public File(String name, int size, boolean writable, String type) {
     	this(null,name,size,writable,type);
     }
     
     
+    
+    /**
+     * Initialize a new file with the given directory reference, name and type.
+     * @param 	dir
+     * 			The directory reference of the new file.
+     * @param 	name
+     * 			The name of the new file.
+     * @param 	type
+     * 			The type of the new file.
+     * @effect	This new file is initialized with a given directory reference, name, a zero size
+     * 			a true writabilit and a type.
+     * 			|this(dir,name,0,true,type);
+     */
     public File(Directory dir, String name, String type) {
     	this(dir,name,0,true,type);
     }
@@ -203,19 +250,7 @@ public class File extends FileSystem {
         }
     }
 
-    
-
-    /**********************************************************
-     * creationTime
-     **********************************************************/
-
-    
-
-    /**********************************************************
-     * modificationTime
-     **********************************************************/
-
- 
+   
    
     
     /**********************************************************
@@ -228,7 +263,19 @@ public class File extends FileSystem {
     
     public String type = null;
     
-    
+    /**
+     * Set the type of this file to the given type.
+     * 
+     * @param 	type
+     * 			The new type for this file.
+     * @post	If the given type is valid, the type of this file
+     * 			is set to the given type.
+     * 			| if (isValidType(type))
+     * 					then new.getType().equals(type)
+     * @throws 	IllegalTypeException(this)
+     * 			This is not a legal type.
+     * 			| ! isValidType()
+     */
     private void setType(String type) throws IllegalTypeException{
     	if (isValidType(type)) {
     		this.type = type;
@@ -240,7 +287,13 @@ public class File extends FileSystem {
     	
     }
     
-    
+    /**
+     * Check whether the given type is a legal type for a file.
+     * @param	type
+     * 			The type to be checked
+     * @return 	True if the given type is either 'txt', 'pdf' or a 'java' type.
+     * 			|
+     */
     public boolean isValidType(String type) {
     	for (int i = 0;i < typeList.size(); i++) {
     		if (type == typeList.get(i)) {
@@ -250,6 +303,11 @@ public class File extends FileSystem {
     	return false;
     }
     
+    
+    
+    /**
+     * Return the type of this file.
+     */
     public String getType() {
     	return type;
     }

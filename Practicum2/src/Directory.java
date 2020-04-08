@@ -205,14 +205,7 @@ public class Directory extends FileSystem{
 		return this.getList().isEmpty();
 	}
 	
-    /**********************************************************
-     * modificationTime
-     **********************************************************/
-	
-	public Date getModificationTime() {
-		return super.getModificationTime();
-	}
-	
+   
 
 	
 	

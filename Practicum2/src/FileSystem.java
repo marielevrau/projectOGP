@@ -7,10 +7,38 @@ import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Model;
 import be.kuleuven.cs.som.annotate.Raw;
 
+
+/**
+ * @invar	Each file must have a properly spelled name.
+ * 			| isValidName(getName())
+ * @invar   Each file must have a valid creation time.
+ *          | isValidCreationTime(getCreationTime())
+ * @invar   Each file must have a valid modification time.
+ *          | canHaveAsModificationTime(getModificationTime())
+ * @author Jérôme D'hulst
+ *
+ */
 public class FileSystem {
 	
 	
-	
+	/**
+	 * Initialize a new filesystem with a given name, directory reference and writablilty.
+	 * 
+	 * @param	name
+	 * 			The name of the new file.
+	 * @param 	dir
+	 * 			The directory reference of the new file.
+	 * @param 	writable
+	 * 			The writabilty of the new file.
+	 * @effect	The name of the file is set to the given name
+	 * 			If the given name is not valid, a default name is set.
+	 * 			| setName(name)
+	 * @effect	The directory reference of the file is set to the given directory.
+	 * 			If the given directory is set to null then this file is root.
+	 * 			| setDir(dir)
+	 * @effect	The writability is set to the given flag.
+	 * 			| setWritablity(writable)
+	 */
 	public FileSystem(String name, Directory dir, Boolean writable) {
 		setName(name);
 		setWritable(writable);
@@ -24,17 +52,39 @@ public class FileSystem {
      * name 
      **********************************************************/
 	
+	/**
+	 * Variable referencing the name of this filesystem.
+	 */
 	private String name = null;
 	
 	
-	
+	/**
+	 * Check whether the given name is a legal name for a filesystem.
+	 * 
+	 * @param 	name
+	 * 			The name to be checked.
+	 * @return	True if the given string is effective, not empty and consisting
+	 * 			only of letters, digits, dots, hyphens and underscores; false otherwise.
+	 * 			| result ==
+	 * 			|	(name != null) && name.matches("[a-zA-Z_0-9.-]+")
+	 */
 	public static boolean isValidName(String name) {
 		return (name != null && name.matches("[a-zA-Z_0-9.-]+"));
 	}
 	
 	
 	
-	
+	/**
+	 * Set the name of this filesystem to the given name.
+	 * 
+	 * @param	name
+	 * 			The new name for this filesystem.
+	 * @post	If the given name is valid, the name of this filesystem is set to the given name,
+	 * 			otherwise the name of this filesystem is set to a valid name (the default).
+	 * 			| if (isValidName(name))
+	 * 			|		then new.getName().equals(name)
+	 * 			|		else new.getName().equals(getDefaultName())
+	 */
 	private void setName(String name) {
 		if (isValidName(name)) {
 			this.name = name;
@@ -46,14 +96,22 @@ public class FileSystem {
 	
 	
 	
-	
+	/**
+	 * Return the name for a new filesystem which is to be used when the
+	 * given name is not valid.
+	 * 
+	 * @return	A valid file name.
+	 * 			| isValidName(result)
+	 */
 	private static String getDefaultName() {
 		return "new_fileSystem";
 	}
 	
 	
 	
-	
+	/**
+	 * Return the name of this filesystem.
+	 */
 	public String getName() {
 		return name;
 	}
@@ -61,21 +119,21 @@ public class FileSystem {
 	
 	
 	/**
-     * Change the name of this fileSystem to the given name.
+     * Change the name of this filesystem to the given name.
      *
      * @param	name
-     * 			The new name for this fileSystem.
-     * @effect  The name of this fileSystem is set to the given name, 
-     * 			if this is a valid name and the fileSystem is writable, 
+     * 			The new name for this filesystem.
+     * @effect  The name of this filesystem is set to the given name, 
+     * 			if this is a valid name and the filesystem is writable, 
      * 			otherwise there is no change.
      * 			| if (isValidName(name) && isWritable())
      *          | then setName(name)
      * @effect  If the name is valid and the fileSystem is writable, the modification time 
-     * 			of this fileSystem is updated.
+     * 			of this filesystem is updated.
      *          | if (isValidName(name) && isWritable())
      *          | then setModificationTime()
      * @throws  FileNotWritableException(this)
-     *          This fileSystem is not writable
+     *          This filesystem is not writable
      *          | ! isWritable() 
      */
 	
@@ -95,14 +153,27 @@ public class FileSystem {
 	/**********************************************************
      * writable
      **********************************************************/
-	
+	/**
+	 * Variable registering whether or not this filesystem is writable.
+	 */
 	private boolean isWritable = true;
 	
+	/**
+	 * Check whether this file is writable.
+	 */
 	public boolean isWritable() {
 		return isWritable;
 	}
 
 	
+	/**
+	 * 
+	 * @param 	isWritable
+	 * 			The new writability.
+	 * @post	The new given writablity is registered as the new writability for 
+	 * 			this filesystem.
+	 * 			| new.isWritable() == isWritable
+	 */
 	public void setWritable(boolean isWritable) {
 		this.isWritable = isWritable;
 	}
@@ -112,8 +183,20 @@ public class FileSystem {
 	/**********************************************************
      * directory reference
      **********************************************************/
+	
+	/**
+	 * An object of the class directory that refers to the directory where this file is 
+	 * located.
+	 */
 	private Directory dir = null;
 	
+	
+	/**
+	 * 
+	 * @param 	dir
+	 * 			The new directory reference.
+	 *  
+	 */
 	void setDir(Directory dir) {
 		this.dir = dir;
 	}
@@ -263,7 +346,12 @@ public FileSystem getRoot() {
 		return this;
 	}
 	else {
-		return dir;
+		FileSystem root = this.getDir();
+		while (root != null) {
+			root = root.getDir();
+		}
+		return root;
+		
 	}
 }
 
