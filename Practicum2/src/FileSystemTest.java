@@ -18,7 +18,6 @@ public class FileSystemTest{
 
   FileSystem MyFileSystem;
   FileSystem Documents;
-  FileSystem NotAValidFolder;
   FileSystem Downloads; /*will make not writable*/
   FileSystem MyOS;
 
@@ -28,19 +27,15 @@ public class FileSystemTest{
 
   @Before
   public void setUpFixture(){
+	timeCreationBeforeConstruction = new Date();
     MyFileSystem = new FileSystem("MyFileSystem", null, true);
-
-    timeCreationBeforeConstruction = new Date();
     Documents = new FileSystem("Documents", MyFileSystem.getDir(), true);
     timeCreationAfterConstruction = new Date();
 
-    NotAValidFolder = new FileSystem("not#a#valid#folder", null, false);
-
     timeBeforeConstructionNotWritable = new Date();
     Downloads = new FileSystem("Downloads", MyFileSystem.getDir(), false);
-    timeAfterConstructionNotWritable = new Date();
-
     MyOS = new FileSystem("MyOS", null, false );
+    timeAfterConstructionNotWritable = new Date();
 
   }
 
@@ -84,9 +79,100 @@ public void extendedConstructorTestDownloads_LegalCase(){
 @Test
 public void extendedConstructorTestDownloads_IllegalCase(){
   timeBeforeConstructionNotWritable = new Date(); 
+  Downloads = new FileSystem("Downloads§@", MyFileSystem.getDir(), false);
+  timeAfterConstructionNotWritable = new Date(); 
+  assertFalse(Downloads.isValidName(Downloads.getName()));
+  assertEquals("new_filesystem", Downloads.getName()); 
+  assertEquals(MyFileSystem, Downloads.getDir()); 
+  assertFalse(Downloads.isWritable()); 
+  assertTrue(Downloads.isValidCreationTime(Downloads.getCreationTime()));
+  assertFalse(timeAfterConstructionNotWritable.after(Downloads.getCreationTime()));
+  
 }
 
+@Test 
+public void extendedConstructorTestMyOS_LegalCase() {
+	assertEquals("MyOS", MyOS.getName()); 
+	assertEquals(null, MyOS.getDir() ); 
+	assertFalse(MyOS.isWritable()); 
+	assertNull(MyOS.getModificationTime()); 
+	assertFalse(timeBeforeConstructionNotWritable.after(MyOS.getCreationTime())); 
+	assertFalse(MyOS.getCreationTime().after(timeAfterConstructionNotWritable)); 
+	
+}
 
+@Test
+public void extendedConstructorTestMyOS_IllegalCase() {
+	timeBeforeConstructionNotWritable = new Date();
+	MyOS = new FileSystem("TEmple!", null, false); 
+	timeAfterConstructionNotWritable = new Date(); 
+	assertEquals("new_filesystem", MyOS.getName()); 
+	assertFalse(MyOS.isWritable());
+	assertNull(MyOS.getModificationTime()); 
+	assertFalse(timeBeforeConstructionNotWritable.after(MyOS.getCreationTime())); 
+	assertFalse(MyOS.getCreationTime().after(timeAfterConstructionNotWritable)); 
+}
+
+@Test
+public void extendedConstructorTestMyFileSystem_LegalCase() {
+	assertEquals("MyFileSystem", MyFileSystem.getName()); 
+	assertTrue(MyFileSystem.isWritable()); 
+	assertTrue(MyFileSystem.isValidCreationTime(MyFileSystem.getCreationTime())); 
+	assertNull(MyFileSystem.getModificationTime());
+	assertEquals(null, MyFileSystem.getDir()); 
+	assertFalse(timeCreationBeforeConstruction.after(MyFileSystem.getCreationTime())); 
+	assertFalse(MyFileSystem.getCreationTime().after(timeCreationAfterConstruction)); 
+	
+}
+
+@Test
+public void extendedConstructorTestMyFilesystem_IllegalCase() {
+	timeCreationBeforeConstruction = new Date();
+	MyFileSystem = new FileSystem("Hard-drive", null, true);
+	timeCreationAfterConstruction = new Date(); 
+	assertEquals("new_filesystem", MyFileSystem.getName()); 
+	assertTrue(MyFileSystem.isWritable());
+	assertEquals(null, MyFileSystem.getDir()); 
+	assertFalse(timeCreationBeforeConstruction.after(MyFileSystem.getCreationTime())); 
+	assertFalse(MyFileSystem.getCreationTime().after(timeCreationAfterConstruction)); 
+	
+}
+
+@Test
+public void testForGetRoot_rootFile() {
+	assertEquals(MyOS, MyOS.getRoot()); 
+}
+
+@Test
+public void testForGetRoot_notRootFile() {
+	assertNotEquals(Documents, Documents.getRoot()); 
+}
+
+@Test
+public void testChangeName_LegalCase() {
+	
+	Date timeBeforeModify = new Date(); 
+	Documents.changeName("Drive");
+	Date timeAfterModify = new Date(); 
+	assertEquals("Torrents", Documents.getName());
+	assertNotEquals(timeBeforeModify, timeBeforeConstructionNotWritable);
+	assertNotEquals(timeAfterModify, timeAfterConstructionNotWritable);
+	assertNotNull(Documents.getModificationTime()); 
+	assertFalse(timeBeforeModify.after(Documents.getModificationTime())); 
+	assertFalse(Documents.getModificationTime().after(timeAfterModify)); 
+}
+
+@Test (expected = FileNotWritableException.class)
+public void testChangeName_IllegalCase(){
+	Downloads.changeName("Torrents");
+}
+
+@Test
+public void testSetWritable() {
+	Downloads.setWritable(true);
+	assertTrue(Downloads.isWritable()); 
+	
+}
 
 
 
