@@ -3,6 +3,7 @@ package Practicum2.src;
 import static org.junit.Assert.*;
 import java.util.Date;
 import org.junit.*;
+import java.util.ArrayList;
 
 /**
 * A JUnit testclass for testing the public methods of the
@@ -174,9 +175,31 @@ public void testSetWritable() {
 	
 }
 
+@Test
+public void testMakeRoot() {
+	Documents.makeRoot();
+	assertEquals(null, Documents.getDir());
+}
 
+@Test
+public void testBin() {
+ 
 
+}
 
+@Test
+public void testForIsValidName_legalcase() {
+	FileSystem validName = new FileSystem("validname", null, true); 
+	String FileSystemName = validName.getName();
+	assertTrue(validName.isValidName(FileSystemName)); 
+}
+
+@Test
+public void testForIsValidName_IllegalCase() {
+	FileSystem notAValidName = new FileSystem("notç&valid", null, true);
+	String FileSystemName = notAValidName.getName(); 
+	assertFalse(notAValidName.isValidName(FileSystemName)); 
+}
 
 
 }
