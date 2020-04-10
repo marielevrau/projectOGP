@@ -8,7 +8,19 @@ public class Directory extends FileSystem{
 	/**********************************************************
      * constructor
      **********************************************************/
-	
+	/**
+	 * Initialize a new directory as a  with a name, directory reference and writability.
+	 * @param 	name
+	 * 			The name of the new directory.
+	 * @param 	dir
+	 * 			The directory reference of the new directory with a null reference if the new directory
+	 * 			is a root 
+	 * @param	writable
+	 * 			The writability of the new directory.
+	 * @effect	This new directory is initialized as a filesystem with the given name,
+	 * 			the given directory reference and the given writability
+	 * 			| super(name,dir,writable)
+	 */
 	public Directory(String name, Directory dir,  Boolean writable) {
 		super(name,dir,writable);
 		
@@ -16,7 +28,15 @@ public class Directory extends FileSystem{
 	}
 	
 	
-	
+	/**
+	 * Initialize a new directory with a given name.
+	 * 
+	 * @param 	name
+	 * 			The name of the new directory
+	 * @effect	This new directory is initialized with the given name, null directory reference and a true 
+	 * 			writability.
+	 * 			| this(name,null,true)
+	 */
 	public Directory(String name) {
 		this(name,null,true);
 	}
@@ -27,7 +47,18 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
+	/**
+	 * Initialize a new directory with a given directory reference and a given name.
+	 * 
+	 * @param 	dir
+	 * 			The directory reference of the new directory with a null reference if the	
+	 * 			the new directory is a root file.
+	 * @param 	name
+	 * 			The name of the new directory.
+	 * @effect	This new directory is initialized with the given directory reference,
+	 * 			the given name and a true writability.
+	 * 			| this(name,dir,true)
+	 */
 	public Directory(Directory dir, String name) {
 		this(name,dir,true);
 	}
@@ -36,6 +67,10 @@ public class Directory extends FileSystem{
 	/**********************************************************
      * list of subfiles and sub-directories
      **********************************************************/
+	
+	/**
+	 * A list that contains the objects from filesystem as its subfiles/subdirectories.
+	 */
 	public List<FileSystem> list = new ArrayList<FileSystem>();
 	
 	
@@ -50,7 +85,9 @@ public class Directory extends FileSystem{
 	}
 	
 	
-	 
+	 /**
+	  * Return the list of this directory.
+	  */
 	public List<FileSystem> getList(){
 		return list;
 	}

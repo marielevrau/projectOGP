@@ -38,11 +38,9 @@ public class File extends FileSystem {
      *         	The writability of the new file.
      * @param 	type
      * 			The type of the new file.
-     * @effect	The directory reference is set to the given object.
-     * 			| setDir(dir)
-     * @effect  The name of the file is set to the given name.
-     * 			If the given name is not valid, a default name is set.
-     *          | setName(name)
+     * @effect	This new file is initialized as a filesystem with a given name, a given
+     * 			directory reference and a given writability.
+     * 			| super(name,dir,writable)
      * @effect	The size is set to the given size (must be valid)
      * 			| setSize(size)
      * @effect	The writability is set to the given flag
@@ -83,13 +81,11 @@ public class File extends FileSystem {
      * @param 	type
      * 			The type of the new file.
      * @effect	This new file is initialized with a 'null' directory reference
-     * 			(meaning this is a root-file), a given name and a given type.
+     * 			(meaning this is a root-file), a given name, a zero size,
+     * 			a true writability and a given type.
      * 			|this(null,name,0,true,type)
      * 			
      */
-    
-    
-    
     public File(String name, String type) {
     	this(null,name,0,true,type);
     }
@@ -125,7 +121,7 @@ public class File extends FileSystem {
      * @param 	type
      * 			The type of the new file.
      * @effect	This new file is initialized with a given directory reference, name, a zero size
-     * 			a true writabilit and a type.
+     * 			a true writability and a type.
      * 			|this(dir,name,0,true,type);
      */
     public File(Directory dir, String name, String type) {
