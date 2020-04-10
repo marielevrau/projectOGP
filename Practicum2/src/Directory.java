@@ -206,20 +206,7 @@ public class Directory extends FileSystem{
 		
 	}
 	
-	/**********************************************************
-     * remove
-     **********************************************************/
 	
-	public void remove(FileSystem fileS) throws NotInListException{
-		if (this.list.contains(fileS)) {
-			list.remove(fileS);
-			fileS.setDir(null);
-		}
-		else {
-			throw new NotInListException(this);
-		}
-
-	}
 	
 	/**********************************************************
      * delete
@@ -231,15 +218,42 @@ public class Directory extends FileSystem{
 			Directory ref = this.getDir();
 			ref.remove(this);
 			this.addToBin();
+			this.setModificationTime();
 		}
 		else{ 
 			throw new DirListNotEmptyException(this);
 		}
 	}
 	
-	
+	/**
+	 * Check whether the list of this directory is empty.
+	 * @return	True if the list is empty.
+	 * 			| this.getList().isEmpty()
+	 */
 	public boolean isListEmpty() {
 		return this.getList().isEmpty();
+	}
+	
+	
+	
+	/**
+	 * Remove a filesystem from the list of this directory.
+	 * @param 	fileS
+	 * 			The filesystem to be removed.
+	 * @post	The given filesystem has been removed from the the list of this directory.
+	 * @throws 	NotInListException(this)
+	 * 			The list of this directory does not contain the given filesystem
+	 * 			
+	 */
+	public void remove(FileSystem fileS) throws NotInListException{
+		if (this.list.contains(fileS)) {
+			list.remove(fileS);
+			fileS.setDir(null);
+		}
+		else {
+			throw new NotInListException(this);
+		}
+
 	}
 	
    

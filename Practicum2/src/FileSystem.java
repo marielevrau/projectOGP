@@ -340,7 +340,10 @@ public class FileSystem {
 	/**********************************************************
      * Root and move
      **********************************************************/
-
+/**
+ * 
+ * @return
+ */
 public FileSystem getRoot() {
 	if (dir == null) {
 		return this;
