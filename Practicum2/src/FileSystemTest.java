@@ -2,6 +2,8 @@ package Practicum2.src;
 
 import static org.junit.Assert.*;
 import java.util.Date;
+import java.util.List;
+
 import org.junit.*;
 import java.util.ArrayList;
 
@@ -19,7 +21,7 @@ public class FileSystemTest{
 
   FileSystem MyFileSystem;
   FileSystem Documents;
-  FileSystem Downloads; /*will make not writable*/
+  FileSystem Downloads; 
   FileSystem MyOS;
 
   Date timeBeforeConstructionNotWritable, timeAfterConstructionNotWritable;
@@ -201,6 +203,118 @@ public void testForIsValidName_IllegalCase() {
 	assertFalse(notAValidName.isValidName(FileSystemName)); 
 }
 
+@Test
+public void testCanHasAsModificationTime_legalCase() {
+	assertTrue(Documents.canHaveAsModificationTime(null)); 
+	assertTrue(Documents.canHaveAsModificationTime(new Date())); 
+}
+
+@Test
+public void testCanHasAsModificationTime_IllegalCase() {
+	assertFalse(Documents.canHaveAsModificationTime(new Date(timeCreationAfterConstruction.getTime() - 1000*60*60))); 
+}
+
+@Test
+public void testHasOverlappingUsePeriod_NoOverlap() {
+	FileSystem first;  
+	first = new FileSystem("first", null, true); 
+	sleep(); //to make sure first.getCreationTime() != second.getCreationTime()
+	FileSystem second; 
+	second = new FileSystem("second", null, true); 
+	
+	assertFalse(first.hasOverlappingUsePeriod(second)); 
+	// modify only one of the FileSystems. 
+	second = new FileSystem("second", null, true); 
+	second.setWritable(false);
+	assertFalse(second.hasOverlappingUsePeriod(first)); 
+}
+
+@Test
+public void testHasOverlappingUsePeriod_nullCase() {
+	FileSystem first, second; 
+	first = new FileSystem("first", null, true); 
+	sleep(); 
+	second = null; 
+	assertFalse(first.hasOverlappingUsePeriod(second)); 
+}
+
+@Test
+public void testHasOverlappingUsePeriod_ModifiedNameOverlap() {
+	FileSystem first, second;
+	first = new FileSystem("first", null, true); 
+	sleep(); 
+	second = new FileSystem("second", null, false); 
+	
+	first.changeName("numberone");
+	sleep(); 
+	second.changeName("numbertwo");
+	assertTrue(first.hasOverlappingUsePeriod(second)); 
+	
+}
+
+@Test
+public void testOverLappingUsePeriod_Move() {
+	FileSystem first, second;
+	first = new FileSystem("first", null, true); 
+	sleep();
+	second = new FileSystem("second", null, true); 
+	
+	Directory Home = new Directory("Home", null, true);
+	first.move(Home);
+	sleep(); 
+	second.move(Home);
+	assertTrue(first.hasOverlappingUsePeriod(second)); 
+}
+
+@Test
+public void testForMove_LegalCase() {
+	List<FileSystem> ExactCopy = new ArrayList<FileSystem>(); 
+	Directory Drive = new Directory("Drive", null, true);
+	FileSystem Music, Photos; 
+	
+	Music = new FileSystem("Music", null, true); 
+	Photos = new FileSystem("Photos", null, true); 
+	// move the filesystems to the drive directory
+	Music.move(Drive);
+	Photos.move(Drive); 
+	// now add the objects 'Music' and 'Photos' to the ExactCopy
+	ExactCopy.add(Music);
+	ExactCopy.add(Photos); 
+	//
+	assertEquals(ExactCopy, Drive.getList()); 
+	
+}
+
+@Test (expected = FileNotWritableException.class)
+public void testForMove_NotWritable() {
+	Directory Default = new Directory("Default", null, false);
+	FileSystem MyPreferences, Users; 
+	MyPreferences = new FileSystem("Preferences", null, true);
+	Users = new FileSystem("Users", null, true); 
+	MyPreferences.move(Default);
+	Users.move(Default);
+}
+
+@Test (expected = AlreadyInListException.class)
+public void testForMove_AlreadyExists() {
+	Directory local = new Directory("local", null, true); 
+	FileSystem settings; 
+	settings = new FileSystem("settings", local, true); 
+	settings.move(local);
+}
+
+
+
+private void sleep() {
+    try {
+        Thread.sleep(50);
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    }
+}
+
 
 }
+
+
 
