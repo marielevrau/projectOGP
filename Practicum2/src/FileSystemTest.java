@@ -18,11 +18,14 @@ import java.util.ArrayList;
 
 
 public class FileSystemTest{
+	
+
 
   FileSystem MyFileSystem;
   FileSystem Documents;
   FileSystem Downloads; 
   FileSystem MyOS;
+  Directory MyDirectory; 
 
   Date timeBeforeConstructionNotWritable, timeAfterConstructionNotWritable;
   Date timeCreationBeforeConstruction, timeCreationAfterConstruction;
@@ -32,11 +35,11 @@ public class FileSystemTest{
   public void setUpFixture(){
 	timeCreationBeforeConstruction = new Date();
     MyFileSystem = new FileSystem("MyFileSystem", null, true);
-    Documents = new FileSystem("Documents", MyFileSystem.getDir(), true);
+    Documents = new FileSystem("Documents", MyDirectory, true);
     timeCreationAfterConstruction = new Date();
 
     timeBeforeConstructionNotWritable = new Date();
-    Downloads = new FileSystem("Downloads", MyFileSystem.getDir(), false);
+    Downloads = new FileSystem("Downloads", MyDirectory, false);
     MyOS = new FileSystem("MyOS", null, false );
     timeAfterConstructionNotWritable = new Date();
 
@@ -46,7 +49,7 @@ public class FileSystemTest{
  public void extendedConstructorTestDocuments_LegalCase(){
    assertEquals("Documents", Documents.getName());
    assertTrue(Documents.isWritable());
-   assertEquals(MyFileSystem, Documents.getDir());
+   assertEquals(MyDirectory, Documents.getDir());
    assertTrue(Documents.isValidName("Documents"));
    assertFalse(timeCreationBeforeConstruction.after(Documents.getCreationTime()));
    assertTrue(timeCreationAfterConstruction.after(Documents.getCreationTime()));
@@ -60,7 +63,7 @@ public void extendedConstructorTestDocuments_IllegalCase(){
   Documents = new FileSystem("Documents!%#", MyFileSystem.getDir(), true);
   timeCreationAfterConstruction = new Date();
   assertFalse(Documents.isValidName(Documents.getName()));
-  assertEquals(MyFileSystem, Documents.getDir());
+  assertEquals(MyDirectory, Documents.getDir());
   assertTrue(Documents.isWritable());
   assertTrue(Documents.isValidCreationTime(Documents.getCreationTime()));
   assertNull(Documents.getModificationTime());
@@ -72,7 +75,7 @@ public void extendedConstructorTestDownloads_LegalCase(){
   assertEquals("Downloads", Downloads.getName());
   assertFalse(Downloads.isWritable());
   assertTrue(Downloads.isValidName(Downloads.getName()));
-  assertEquals(MyFileSystem, Downloads.getDir());
+  assertEquals(MyDirectory, Downloads.getDir());
   assertNull(Downloads.getModificationTime());
   assertTrue(Downloads.isValidCreationTime(Downloads.getCreationTime()));
   assertFalse(timeBeforeConstructionNotWritable.after(Downloads.getCreationTime()));
@@ -82,11 +85,11 @@ public void extendedConstructorTestDownloads_LegalCase(){
 @Test
 public void extendedConstructorTestDownloads_IllegalCase(){
   timeBeforeConstructionNotWritable = new Date(); 
-  Downloads = new FileSystem("Downloads§@", MyFileSystem.getDir(), false);
+  Downloads = new FileSystem("Downloads§@", MyDirectory, false);
   timeAfterConstructionNotWritable = new Date(); 
   assertFalse(Downloads.isValidName(Downloads.getName()));
   assertEquals("new_filesystem", Downloads.getName()); 
-  assertEquals(MyFileSystem, Downloads.getDir()); 
+  assertEquals(MyDirectory, Downloads.getDir()); 
   assertFalse(Downloads.isWritable()); 
   assertTrue(Downloads.isValidCreationTime(Downloads.getCreationTime()));
   assertFalse(timeAfterConstructionNotWritable.after(Downloads.getCreationTime()));
@@ -110,6 +113,7 @@ public void extendedConstructorTestMyOS_IllegalCase() {
 	MyOS = new FileSystem("TEmple!", null, false); 
 	timeAfterConstructionNotWritable = new Date(); 
 	assertEquals("new_filesystem", MyOS.getName()); 
+	assertEquals(null, MyOS.getDir()); 
 	assertFalse(MyOS.isWritable());
 	assertNull(MyOS.getModificationTime()); 
 	assertFalse(timeBeforeConstructionNotWritable.after(MyOS.getCreationTime())); 
