@@ -194,6 +194,7 @@ public class DirectoryTest {
 		assertTrue(OuterDir.hasAsItem(DirWritable)); 
 		
 	}
+	@After
 	
 	@Test (expected = NotInListException.class)
 	public void testCanHaveAsItem_Illegalcase() {
@@ -205,7 +206,58 @@ public class DirectoryTest {
 		InnerDir.setDir(OuterDir); 
 		assertEquals(3,OuterDir.getNbItems()); 
 	}
+	@After
 	
+	@Test
+	public void testGetItemAt_LegalCaseA() {
+		//testing the accessing of files within one directory 
+		File one, two, three; 
+		one = new File(DirWritable, "one", 56, true, "pdf"); 
+		two = new File(DirWritable, "two", 789, true, "java"); 
+		three = new File(DirWritable, "three", 9, true, "txt"); 
+		assertEquals(two, DirWritable.getItemAt(2)); 
+	}
+	@After 
+	
+	@Test (expected = IndexOutOfRangeException.class)
+	public void testGetItemAt_IllegalCaseA() {
+		File one, two, three; 
+		one = new File(DirWritable, "one", 56, true, "pdf"); 
+		two = new File(DirWritable, "two", 789, true, "java"); 
+		three = new File(DirWritable, "three", 9, true, "txt"); 
+		DirWritable.getItemAt(5); 
+	}
+	@After
+	
+	@Test
+	public void testGetItemAt_LegalCaseB() {
+		//testing the accessing of directories within directories
+		InnerDir.setDir(OuterDir);
+		assertEquals(DirFull, OuterDir.getItemAt(0)); 
+	}
+	@After
+	
+	@Test (expected = IndexOutOfRangeException.class)
+	public void testGetItemAt_IllegalCaseB() {
+		OuterDir.getItemAt(5); 
+	}
+	
+	@Test
+	public void testGetIndexOf_legalCaseA() {
+		//testing the accessing of files within directories
+		OuterDir = new Directory("OuterDir");
+		InnerDir = new Directory(OuterDir, "InnerDir"); 
+		File BeforeDirJustName;
+		BeforeDirJustName = new File(InnerDir, "before", 10, true,"pdf"); 
+		assertEquals(1, InnerDir.getIndexOf(BeforeDirJustName.getName())); 
+	}
+	@After
+	
+	@Test(expected = NotInListException.class)
+	public void testGetIndexOf_IllegalCaseA() {
+		File file = new File("file"); 
+		InnerDir.getIndexOf(file.getName()); 
+	}
 	
 	
 }
