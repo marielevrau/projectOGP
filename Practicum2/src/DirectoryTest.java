@@ -120,6 +120,12 @@ public class DirectoryTest {
 	public void testForIsDirectOrIndirectSubDirectoryOf_IllegalCaseNoSub() {
 		assertFalse(DirJustName.isDirectOrIndirectSubdirectoryOf(DirFull)); 
 	}
-
+	@Test
+	public void testForGetList(){
+		OuterDir = new Directory("OuterDir", null, true); 
+		InnerDir = new Directory("InnerDir",OuterDir, false); 
+		File SomeFile = new File(InnerDir, "ogp", 20, false, ".java"); 
+		File AnotherFile = new File(DirFull, "p_and_o",45, false, ".pdf"); 
+	}
 }
 
