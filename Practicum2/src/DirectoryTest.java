@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
  */
 public class DirectoryTest {
 	
+
 	Directory DirJustName, DirWritable, DirFull; 
 	Directory OuterDir, InnerDir; 
 	Date timeBeforeCreationWritable, timeAfterCreationWritable;
@@ -30,6 +31,7 @@ public class DirectoryTest {
 		timeBeforeCreationNotWritable = new Date(); 
 		DirFull = new Directory("directory", OuterDir, false);
 		timeAfterCreationNotWritable = new Date(); 
+		
 	}
 	
 	@Test
@@ -122,10 +124,89 @@ public class DirectoryTest {
 	}
 	@Test
 	public void testForGetList(){
+		// initialise some files and directories and add them to an empty Arraylist
 		OuterDir = new Directory("OuterDir", null, true); 
 		InnerDir = new Directory("InnerDir",OuterDir, false); 
-		File SomeFile = new File(InnerDir, "ogp", 20, false, ".java"); 
-		File AnotherFile = new File(DirFull, "p_and_o",45, false, ".pdf"); 
+		File SomeFile = new File(InnerDir, "ogp", 20, false, "java"); 
+		File AnotherFile = new File(DirFull, "p_and_o",45, false, "pdf"); 
+		List<FileSystem> ToCompare = new ArrayList<FileSystem>();
+		ToCompare.add(OuterDir); 
+		ToCompare.add(DirFull);
+		ToCompare.add(AnotherFile);
+		ToCompare.add(InnerDir);
+		ToCompare.add(SomeFile); 
+		assertEquals(ToCompare, OuterDir.getList()); 
 	}
+	
+	@Test
+	public void testForMove_LegalCase() {
+		DirJustName.move(DirWritable);
+		Directory dir = DirJustName.getDir(); 
+		assertEquals(DirWritable, dir); 
+		
+	}
+	
+	@Test (expected = FileNotWritableException.class)
+	public void testForMove_NotWritableException() {
+		DirJustName.move(DirFull);
+		assertEquals(DirFull, DirJustName.getDir()); 
+	}
+	
+	@Test (expected = AlreadyInListException.class)
+	public void testForMove_AlreadyInListException() {
+		DirJustName.move(null);
+		assertEquals(null, DirJustName.getDir()); 
+		
+	}
+	
+	@Test
+	public void testListEmpty_trueCase() {
+		Directory NullDirectory = new Directory("empty_directory");
+		assertTrue(NullDirectory.isListEmpty()); 
+		
+	}
+	
+	//normally, following test should be applicable for FileSystem, but only for Directories
+	@Test
+	public void testListEmpty_falseCase() {
+		Directory NotNullDirectory = new Directory("justanotherdirectory"); 
+		File File = new File(NotNullDirectory, "file", 35, true, "txt"); 
+		assertFalse(NotNullDirectory.isListEmpty()); 
+	}
+	
+	@Test
+	public void testForRemove_LegalCase() {
+		InnerDir.remove(DirWritable);
+		assertTrue(InnerDir.isListEmpty()); 
+		assertNotNull(InnerDir.getModificationTime()); 
+	}
+	
+	@Test (expected = NotInListException.class)
+	public void testForRemove_IllegalCase() {
+		File dummy = new File("dummy"); 
+		InnerDir.remove(dummy);
+		assertNull(InnerDir.getModificationTime()); 
+	}
+	
+	@Test
+	public void testCanHaveAsItem_LegalCase() {
+		InnerDir.setDir(OuterDir);
+		assertTrue(OuterDir.hasAsItem(DirWritable)); 
+		
+	}
+	
+	@Test (expected = NotInListException.class)
+	public void testCanHaveAsItem_Illegalcase() {
+		assertFalse(OuterDir.hasAsItem(DirJustName)); 
+	}
+	
+	@Test
+	public void testgetNbItems() {
+		InnerDir.setDir(OuterDir); 
+		assertEquals(3,OuterDir.getNbItems()); 
+	}
+	
+	
+	
 }
 
