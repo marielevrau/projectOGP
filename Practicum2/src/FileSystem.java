@@ -364,6 +364,7 @@ public FileSystem getRoot() {
 
 
 public void makeRoot() {
+	setModificationTime();
 	setDir(null);
 	}
 
@@ -388,7 +389,7 @@ public int seekAlphabeticPosition(String string) {
 	return pos; 
 }
 
-public Directory insertNewIntoDirectory(int position, FileSystem file) {
+public void insertNewIntoDirectory(int position, FileSystem file) {
 	List<FileSystem> list = this.getDir().getList(); 
 	list.add(position, file);
 }
@@ -401,7 +402,8 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 			}
 			else {
 				int pos = dir.seekAlphabeticPosition(this.getName());
-				dir.insertNewIntoDirectory(pos, this.name);
+				dir.insertNewIntoDirectory(pos, this);
+				setModificationTime();
 				
 			}
 		}	
