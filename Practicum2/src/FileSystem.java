@@ -454,30 +454,47 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 /**********************************************************
  * delete
  **********************************************************/
+/**
+ * Variable registering whether or not this filesystem has been deleted.
+ */
+private boolean isDeleted = false;
 
-public static List<FileSystem> bin = new ArrayList<FileSystem>();
-
-public List<FileSystem> getBin(){
-	return bin;
+/**
+ * Check whether this file has been deleted.
+ */
+public boolean isDeleted() {
+	return isDeleted;
 }
 
-public void addToBin() {
-	bin.add(this);
+/**
+ * 
+ * @param 	isDeleted
+ * 			NOG AFWERKEN!!!!!!!!!!!!!
+ * 			The new writability.
+ * @post	The new given writablity is registered as the new writability for 
+ * 			this filesystem.
+ * 			| new.isDeleted() == isDeleted
+ */
+public void setDelete(boolean isDeleted) {
+	this.isDeleted = isDeleted;
 }
 
 
-
-public void delete() {
-	
+/**
+ * 
+ * Delete this filesystem from the system.
+ */
+public void delete() FileSystemAlreadyDeletedException{
+	if (this.isDeleted() == false) {
+		Directory ref = this.getDir();
+    	ref.remove(this);
+    	this.setDelete(true);	
+	}
+	else {
+		throw new FileSystemAlreadyDeletedException(this);
+		
+	}
 }
-
-
-
-
-
-
-
-
 
 
 
