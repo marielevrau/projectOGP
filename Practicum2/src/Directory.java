@@ -43,10 +43,6 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
-	
-	
-	
 	/**
 	 * Initialize a new directory with a given directory reference and a given name.
 	 * 
@@ -93,6 +89,16 @@ public class Directory extends FileSystem{
 	}
 	
 	
+	/**
+	 * Return the sub-directory or subfile with given index in the directory list.
+	 * 
+	 * @param	index
+	 * 			The index in the directory list.
+	 * @return	the sub-directory or subfile with given index in the directory list.
+	 * @throws	IndexOutOfRangeException(this)
+	 *			The given index is out of range.
+	 *			| (index >= list.size()) || (list.size() == 0 )
+	 */
 	public FileSystem getItemAt(int index) throws IndexOutOfRangeException {
 		if ((index >= list.size()) || (list.size() == 0 )) {
 			throw new IndexOutOfRangeException(this);
@@ -105,7 +111,16 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
+	/**
+	 * Return the sub-directory or subfile with given name.
+	 * 
+	 * @param	name
+	 * 			The name in the directory list. 
+	 * @return	the sub-directory or subfile with given name.
+	 * @throws	NotInListException(this)
+	 *			The given name is not in the list of this directory.
+	 *			| ! this.exists(name)
+	 */
 	public FileSystem getItem(String name) throws NotInListException {
 		if (this.exists(name)) {
 			int index = 0;
@@ -129,7 +144,15 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
+	/**
+	 * Check whether the given name exists in the directory list.
+	 * 
+	 * @param	name
+	 * 			The name in the directory list.
+	 * @return	True if and only if the name in the directory list is equal to the given name.
+	 * 			|if ((list.get(i).getName()).toLowerCase() == name.toLowerCase())
+	 *
+	 */
 	public boolean exists(String name) {
 		for (int i = 0; i < list.size();i++) {
 			if ((list.get(i).getName()).toLowerCase() == name.toLowerCase()) {
@@ -141,10 +164,16 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
-	
-	
-	
+	/**
+	 * Return the index of the given name in the directory list.
+	 * 
+	 * @param	name
+	 * 			The name in the directory list.
+	 * @return	The index of the given name in the directory list.
+	 * @throws	NotInListException(this)
+	 *			The given name is not in the list of this directory.
+	 *			| ! this.exists(name)
+	 */
 	public int getIndexOf(String name) throws NotInListException{
 		if (this.exists(name)) {
 			int index = 0;
@@ -163,7 +192,9 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
+	/**
+	 * Return the amount of subfiles and sub-directories in this directory.
+	*/
 	public int getNbItems() {
 		return this.list.size();
 	}
@@ -171,7 +202,17 @@ public class Directory extends FileSystem{
 	
 	
 	
-	
+	/**
+	 * Check whether this directory contains the given file or directory.
+	 * 
+	 * @param	fileDir
+	 * 			The given file or directory.
+	 * @return	True if and only if the directory list contains this file or directory.
+	 * 			| if (this.list.contains(FileDir)) 
+	 * @throws	NotInListException(this)
+	 *			The given name is not in the list of this directory.
+	 *			| ! (this.list.contains(FileDir))
+	 */
 	public boolean hasAsItem(FileSystem FileDir) throws NotInListException {
 		if (this.list.contains(FileDir)) {
 			return true;
@@ -182,7 +223,20 @@ public class Directory extends FileSystem{
 	}
 	
 	
-	
+	/**
+	 * Check whether this directory is a direct or indirect sub-directory of the given directory.
+	 * 
+	 * @param	directory
+	 * 			The given directory.
+	 * @return	True if and only if this directory is a direct or indirect sub-directory of the given directory.
+	 * @throws	IsRootDirectoryException(this)
+	 *			This directory is a root directory. 
+	 *			| (super.getRoot() == this)
+	 * @throws	NotDirectOrIndirectSubdirectoryException(this)
+	 *			This directory is not a direct or indirect sub-directory of the given directory. 
+	 *			| !(super.getRoot() == this) && !(super.getRoot() == directory)
+	 *
+	 */
 	public boolean isDirectOrIndirectSubdirectoryOf(Directory directory) throws IsRootDirectoryException, NotDirectOrIndirectSubdirectoryException {
 		if(super.getRoot() == this) {
 			throw new IsRootDirectoryException(this);
@@ -200,6 +254,7 @@ public class Directory extends FileSystem{
      * Root and move
      **********************************************************/
 	
+	
 	public void move(Directory dir) {
 		setModificationTime();
 		super.move(dir);
@@ -211,19 +266,21 @@ public class Directory extends FileSystem{
 	/**********************************************************
      * delete
      **********************************************************/
-	@Override
+	
 	/**
 	 * Delete this directory from the system.
 	 * 
+	 * @effect	If the directory list is empty, this directory will be deleted.
+	 * 			| if (this.isListEmpty())
+	 * 			| then (super.delete() && this.setModificationTime())
 	 *@throws	DirListNotEmptyException(this)
 	 *			The list of this directory is not empty.
 	 *			| ! this.isListEmpty()
 	 */
+	@Override
 	public void delete() throws DirListNotEmptyException {
 		if (this.isListEmpty()) {
-			Directory ref = this.getDir();
-			ref.remove(this);
-			this.addToBin();
+			super.delete();
 			this.setModificationTime();
 		}
 		else{ 

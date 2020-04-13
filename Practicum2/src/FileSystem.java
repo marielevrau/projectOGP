@@ -460,7 +460,10 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 private boolean isDeleted = false;
 
 /**
- * Check whether this file has been deleted.
+ * Check whether this filesystem has been deleted.
+ * 
+ * @return	True if the filesystem has been deleted.
+ * 			| isDeleted
  */
 public boolean isDeleted() {
 	return isDeleted;
@@ -469,9 +472,8 @@ public boolean isDeleted() {
 /**
  * 
  * @param 	isDeleted
- * 			NOG AFWERKEN!!!!!!!!!!!!!
- * 			The new writability.
- * @post	The new given writablity is registered as the new writability for 
+ * 			The new status of isDeleted.
+ * @post	The new given status to isDeleted is registered as the new status to isDeleted for 
  * 			this filesystem.
  * 			| new.isDeleted() == isDeleted
  */
@@ -483,15 +485,24 @@ public void setDelete(boolean isDeleted) {
 /**
  * 
  * Delete this filesystem from the system.
+ * 
+ * @effect	This filesystem has been deleted,
+ * 			if the file has not already been deleted
+ * 			| MOET IK HIER DAN ELSE SCHRIJVEN OF MAG DIT NIET? MOET DAAR SOWIESO IF STAAN?
+ * 			| then (ref.remove(this) && this.setDelete(true))
+ * 
+ * @throws	AlreadyDeletedException(this)
+ *			The filesystem has already been deleted.
+ *			| this.isDeleted()
  */
-public void delete() FileSystemAlreadyDeletedException{
-	if (this.isDeleted() == false) {
-		Directory ref = this.getDir();
-    	ref.remove(this);
-    	this.setDelete(true);	
+public void delete() AlreadyDeletedException{
+	if (this.isDeleted()) {
+		throw new AlreadyDeletedException(this);
 	}
 	else {
-		throw new FileSystemAlreadyDeletedException(this);
+		Directory ref = this.getDir();
+    	ref.remove(this);
+    	this.setDelete(true);		
 		
 	}
 }
