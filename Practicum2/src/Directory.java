@@ -212,7 +212,13 @@ public class Directory extends FileSystem{
      * delete
      **********************************************************/
 	@Override
-	/*!!! setModificationTime() nog toevoegen aan functie delete(), heb ik nu nog niet gedaan want delete() ging jérome nog aanpassen!!!*/
+	/**
+	 * Delete this directory from the system.
+	 * 
+	 *@throws	DirListNotEmptyException(this)
+	 *			The list of this directory is not empty.
+	 *			| ! this.isListEmpty()
+	 */
 	public void delete() throws DirListNotEmptyException {
 		if (this.isListEmpty()) {
 			Directory ref = this.getDir();
@@ -227,6 +233,7 @@ public class Directory extends FileSystem{
 	
 	/**
 	 * Check whether the list of this directory is empty.
+	 * 
 	 * @return	True if the list is empty.
 	 * 			| this.getList().isEmpty()
 	 */
@@ -238,6 +245,7 @@ public class Directory extends FileSystem{
 	
 	/**
 	 * Remove a filesystem from the list of this directory.
+	 * 
 	 * @param 	fileS
 	 * 			The filesystem to be removed.
 	 * @post	The given filesystem has been removed from the the list of this directory.

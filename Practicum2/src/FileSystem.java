@@ -201,6 +201,10 @@ public class FileSystem {
 		this.dir = dir;
 	}
 	
+	
+	/**
+	 * Return the directory reference of this filesystem.
+	 */
 	public Directory getDir() {
 		return dir;
 	}
@@ -257,11 +261,10 @@ public class FileSystem {
    
     /**
      * Return the time at which this fileSystem was last modified, that is
-     * at which the name or size was last changed. If this fileSysteem has
+     * at which the filesystem was last changed. If this fileSysteem has
      * not yet been modified after construction, null is returned.
      */
     
-    /* !!!!!!!!!!!! specificatie hierboven 'at which the name or size was last changed' naam is zowel voor File als Directory, size enkel voor File, en delete() en move() enkel voor Directory? specifiek bij File of Directory zetten of hierboven ook nog eens vermelden??!!!!!! */
     @Raw @Basic
     public Date getModificationTime() {
         return modificationTime;
@@ -341,8 +344,11 @@ public class FileSystem {
      * Root and move
      **********************************************************/
 /**
+ * Returns the root of this filesystem.
  * 
- * @return
+ * @return the filesystem that is the main reference of this filesystem.
+ * 		   If a filesystem is a root filesystem than the filesystem itself 
+ * 		   gets returned.
  */
 public FileSystem getRoot() {
 	if (dir == null) {
@@ -362,24 +368,47 @@ public FileSystem getRoot() {
 
 
 
-
-public void makeRoot() {
-	setModificationTime();
-	setDir(null);
+/**
+ * This filesystem becomes a root filesystem.
+ * 
+ * @post	The directory reference of this filesystem is set to null.
+ * 			| setDir(null)
+ * @effect  If the name is valid and the fileSystem is writable, the modification time 
+ * 			of this filesystem is updated.
+ *      	| if (isValidName(name) && isWritable())
+ *      	| then setModificationTime()
+ * 			
+ */
+public void makeRoot() throws FileNotWritableException {
+	if (isWritable()) {
+		setModificationTime();
+		setDir(null);
 	}
+	else {
+		throw new FileNotWritableException(this);
+	}
+}
 
 
-
-public int seekAlphabeticPosition(String string) {
+/**
+ * Return the correct index in the reference list to add this filesystem.
+ * 
+ * @param 	name
+ * 			The name of the filesystem of which the correct position in
+ * 			the list of its reference is needed. 
+ * @return	the correct index in the list where this file is lexicographic in the right position.
+ * 
+ */
+public int seekAlphabeticPosition(String name) {
 	List<FileSystem> list = this.getDir().getList();
 	int pos = 0;
 	for(int i = 0; i < list.size(); i++) {
-		if(string.charAt(0) < list.get(i).getName().charAt(0)) {
+		if(name.charAt(0) < list.get(i).getName().charAt(0)) {
 			pos = i; 
 		}
-		if(string.charAt(0) == list.get(i).getName().charAt(0)) {
+		if(name.charAt(0) == list.get(i).getName().charAt(0)) {
 			for(int j = 1; j < list.get(i).getName().length();j++) {
-				if(string.charAt(j) < list.get(i).getName().charAt(j)) {
+				if(name.charAt(j) < list.get(i).getName().charAt(j)) {
 					pos = i; 
 				}
 			}
@@ -389,6 +418,13 @@ public int seekAlphabeticPosition(String string) {
 	return pos; 
 }
 
+
+/**
+ * 
+ * 
+ * @param position
+ * @param file
+ */
 public void insertNewIntoDirectory(int position, FileSystem file) {
 	List<FileSystem> list = this.getDir().getList(); 
 	list.add(position, file);
