@@ -14,19 +14,19 @@ public class FileNotWritableException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Variable referencing the file to which change was denied.
+	 * Variable referencing the filesystem to which change was denied.
 	 */
 	private final FileSystem FileSystem;
 
 	/**
-	 * Initialize this new file not writable exception involving the
-	 * given file.
+	 * Initialize this new filesystem not writable exception involving the
+	 * given filesystem.
 	 * 
-	 * @param	file
-	 * 			The file for the new file not writable exception.
-	 * @post	The file involved in the new file not writable exception
-	 * 			is set to the given file.
-	 * 			| new.getFile() == file
+	 * @param	filesystem
+	 * 			The filesystem for the new filesystem not writable exception.
+	 * @post	The filesystem involved in the new filesystem not writable exception
+	 * 			is set to the given filesystem.
+	 * 			| new.getFile() == filesystem
 	 */
 	@Raw
 	public FileNotWritableException(FileSystem FileSystem) {
@@ -34,7 +34,7 @@ public class FileNotWritableException extends RuntimeException {
 	}
 	
 	/**
-	 * Return the file involved in this file not writable exception.
+	 * Return the file involved in this filesystem not writable exception.
 	 */
 	@Raw @Basic @Immutable
 	public FileSystem getFileSystem() {
