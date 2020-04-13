@@ -1,5 +1,3 @@
-import be.kuleuven.cs.som.annotate.*;
-
 /**
  * A class for signaling that a filesystem has already been deleted.
  * 
@@ -7,7 +5,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @version	2.1
  */
 
-public class FileSystemAlreadyDeletedException {
+public class AlreadyDeletedException {
 
 	/**
 	 * Required because this class inherits from Exception
@@ -20,21 +18,21 @@ public class FileSystemAlreadyDeletedException {
 	private final FileSystem fileSystem;
 	
 	/**
-	 * Initialize this new filesystem already deleted exception involving the given filesystem.
+	 * Initialize this new already deleted exception involving the given filesystem.
 	 * 
 	 * @param	filesystem
-	 * 			The filesystem for the new filesystem already deleted exception.
-	 * @post	The filesystem involved in the new filesystem already deleted exception
+	 * 			The filesystem for the new already deleted exception.
+	 * @post	The filesystem involved in the new already deleted exception
 	 * 			is set to the given filesystem.
 	 * 			| new.getFileSystem() == fileSystem
 	 */
 	@Raw
-	public FileSystemAlreadyDeletedException(FileSystem fileSystem) {
+	public AlreadyDeletedException(FileSystem fileSystem) {
 		this.fileSystem = fileSystem;
 	}
 	
 	/**
-	 * Return the fileSystem involved in this filesystem already deleted exception.
+	 * Return the fileSystem involved in this already deleted exception.
 	 */
 	@Raw @Basic @Immutable
 	public FileSystem getFileSystem() {
