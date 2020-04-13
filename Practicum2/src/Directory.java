@@ -245,13 +245,20 @@ public class Directory extends FileSystem{
 	 * 			The list of this directory does not contain the given filesystem
 	 * 			
 	 */
-	public void remove(FileSystem fileS) throws NotInListException{
-		if (this.list.contains(fileS)) {
-			list.remove(fileS);
-			fileS.setDir(null);
+	public void remove(FileSystem fileS) throws NotInListException, FileNotWritableException{
+		if (this.isWritable()) {
+			if (this.list.contains(fileS)) {
+				list.remove(fileS);
+				fileS.setDir(null);
+				this.setModificationTime();
+			}
+	
+			else {
+				throw new NotInListException(this);
+			}
 		}
 		else {
-			throw new NotInListException(this);
+			throw new FileNotWritableExcecption(this)
 		}
 
 	}
