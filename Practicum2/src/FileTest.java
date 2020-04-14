@@ -6,9 +6,16 @@ import org.junit.*;
 /**
  * A JUnit test class for testing the public methods of the File Class  
  * @author Tommy Messelis
+ * 
+ * adapted and slightly rewritten by
+ * @author willemsart
+ * @author Marie Levrau 
+ * @author Jérôme D'hulst 
  *
  */
 public class FileTest {
+	
+	Directory MyFiles; 
 
 	File fileStringIntBoolean;
 	File fileString;
@@ -20,18 +27,19 @@ public class FileTest {
 	@Before
 	public void setUpFixture(){
 		timeBeforeConstruction = new Date();
-		fileStringIntBoolean = new File("bestand.txt",100, true);
+		fileStringIntBoolean = new File(MyFiles, "bestand",100, true, "txt");
 		fileString = new File("bestand.txt");
 		timeAfterConstruction = new Date();
 
 		timeBeforeConstructionNotWritable = new Date();
-		fileNotWritable = new File("bestand.txt",100,false);
+		fileNotWritable = new File(MyFiles, "bestand",100,false, "pdf");
 		timeAfterConstructionNotWritable = new Date();
 	}
 
 	@Test
 	public void testFileStringIntBoolean_LegalCase() {
-		assertEquals("bestand.txt",fileStringIntBoolean.getName());
+		assertEquals("bestand",fileStringIntBoolean.getName());
+		assertEquals("txt", fileStringIntBoolean.getType()); 
 		assertEquals(fileStringIntBoolean.getSize(),100);
 		assertTrue(fileStringIntBoolean.isWritable());
 		assertNull(fileStringIntBoolean.getModificationTime());
@@ -42,9 +50,10 @@ public class FileTest {
 	@Test
 	public void testFileStringIntBoolean_IllegalCase() {
 		timeBeforeConstruction = new Date();
-		fileStringIntBoolean = new File("$IllegalName$",File.getMaximumSize(),false);
+		fileStringIntBoolean = new File(null, "$IllegalName$",File.getMaximumSize(),false, "pdf");
 		timeAfterConstruction = new Date();
-		assertTrue(File.isValidName(fileStringIntBoolean.getName()));
+		assertFalse(File.isValidName(fileStringIntBoolean.getName()));
+		assertTrue(fileStringIntBoolean.isValidType(fileStringIntBoolean.getType())); 
 		assertEquals(File.getMaximumSize(),fileStringIntBoolean.getSize());
 		assertFalse(fileStringIntBoolean.isWritable());
 		assertNull(fileStringIntBoolean.getModificationTime());
@@ -54,7 +63,8 @@ public class FileTest {
 
 	@Test
 	public void testFileString_LegalCase() {
-		assertEquals("bestand.txt",fileString.getName());
+		assertEquals("bestand",fileString.getName());
+		assertEquals("txt", fileString.getType()); 
 		assertEquals(0,fileString.getSize());
 		assertTrue(fileString.isWritable());
 		assertNull(fileString.getModificationTime());
@@ -67,7 +77,8 @@ public class FileTest {
 		timeBeforeConstruction = new Date();
 		fileString = new File("$IllegalName$");
 		timeAfterConstruction = new Date();
-		assertTrue(File.isValidName(fileString.getName()));
+		assertFalse(File.isValidName(fileString.getName()));
+		assertTrue(fileString.isValidType(fileString.getType())); 
 		assertEquals(0,fileString.getSize());
 		assertTrue(fileString.isWritable());
 		assertNull(fileString.getModificationTime());
@@ -86,6 +97,21 @@ public class FileTest {
 		assertFalse(File.isValidName(""));
 		assertFalse(File.isValidName("%illegalSymbol"));
 		
+	}
+	
+	@Test
+	public void testIsValidType_LegalCase() {
+		File file; 
+		assertTrue(file.isValidType("txt")); 
+		assertTrue(file.isValidType("pdf")); 
+		assertTrue(file.isValidType("java")); 
+	}
+	
+	@Test
+	public void testIsValidType_IllegalCase() {
+		File file; 
+		assertFalse(file.isValidType("py"));
+		assertFalse(file.isValidType("plist")); 
 	}
 
 	@Test
@@ -111,7 +137,7 @@ public class FileTest {
 		assertEquals("bestand.txt",fileString.getName());
 		assertNull(fileString.getModificationTime());
 	}
-
+	
 	@Test
 	public void testIsValidSize_LegalCase() {
 		assertTrue(File.isValidSize(0));
@@ -129,7 +155,7 @@ public class FileTest {
 
 	@Test
 	public void testEnlarge_LegalCase() {
-		File file = new File("bestand.txt",File.getMaximumSize()-1,true);
+		File file = new File(MyFiles,"bestand",File.getMaximumSize()-1,true, "txt");
 		Date timeBeforeEnlarge = new Date();
 		file.enlarge(1);
 		Date timeAfterEnlarge = new Date();		
