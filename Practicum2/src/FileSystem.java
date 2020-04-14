@@ -495,7 +495,7 @@ public void setDelete(boolean isDeleted) {
  *			The filesystem has already been deleted.
  *			| this.isDeleted()
  */
-public void delete() AlreadyDeletedException{
+public void delete() throws AlreadyDeletedException{
 	if (this.isDeleted()) {
 		throw new AlreadyDeletedException(this);
 	}

@@ -5,7 +5,7 @@
  * @version	2.1
  */
 
-public class AlreadyDeletedException {
+public class AlreadyDeletedException extends RuntimeException{
 
 	/**
 	 * Required because this class inherits from Exception
