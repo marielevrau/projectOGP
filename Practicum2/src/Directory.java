@@ -323,7 +323,7 @@ public class Directory extends FileSystem{
 			}
 		}
 		else {
-			throw new FileNotWritableExcecption(this)
+			throw new FileNotWritableException(this)
 		}
 
 	}
