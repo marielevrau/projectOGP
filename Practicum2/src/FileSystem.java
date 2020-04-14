@@ -487,22 +487,22 @@ public void setDelete(boolean isDeleted) {
  * Delete this filesystem from the system.
  * 
  * @effect	This filesystem has been deleted,
- * 			if the file has not already been deleted
- * 			| MOET IK HIER DAN ELSE SCHRIJVEN OF MAG DIT NIET? MOET DAAR SOWIESO IF STAAN?
+ * 			if the filesystem has not already been deleted
+ * 			| if (this.isDeleted() == false)
  * 			| then (ref.remove(this) && this.setDelete(true))
  * 
  * @throws	AlreadyDeletedException(this)
  *			The filesystem has already been deleted.
- *			| this.isDeleted()
+ *			| this.isDeleted() == true
  */
 public void delete() throws AlreadyDeletedException{
-	if (this.isDeleted()) {
-		throw new AlreadyDeletedException(this);
-	}
-	else {
+	if (this.isDeleted() == false) {
 		Directory ref = this.getDir();
     	ref.remove(this);
-    	this.setDelete(true);		
+    	this.setDelete(true);	
+	}
+	else {
+		throw new AlreadyDeletedException(this);	
 		
 	}
 }
