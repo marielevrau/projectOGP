@@ -209,6 +209,13 @@ public class DirectoryTest {
 	@After
 	
 	@Test
+	public void testGetNbItems_null() {
+		Directory Empty = new Directory("empty"); 
+		assertEquals(0, Empty.getNbItems()); 
+	}
+	@After
+	
+	@Test
 	public void testGetItemAt_LegalCaseA() {
 		//testing the accessing of files within one directory 
 		File one, two, three; 
@@ -258,6 +265,22 @@ public class DirectoryTest {
 		File file = new File("file"); 
 		InnerDir.getIndexOf(file.getName()); 
 	}
+	
+	@Test
+	public void testGetIndexOf_LegalCaseB() {
+		//now we test to find the index of directory within a directory
+		InnerDir = new Directory("InnerDir", OuterDir, true);
+		assertEquals(2, OuterDir.getIndexOf("InnerDir")); 
+	}
+	@After
+	
+	@Test (expected = NotInListException.class)
+	public void testGetIndexOf_IllegalCaseB() {
+		Directory DirNotInOuterDir = new Directory("dir", null, true ); 
+		OuterDir.getIndexOf(DirNotInOuterDir.getName()); 
+	}
+	
+	
 	
 	
 }
