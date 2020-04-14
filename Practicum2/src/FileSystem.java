@@ -85,6 +85,7 @@ public class FileSystem {
 	 * 			|		then new.getName().equals(name)
 	 * 			|		else new.getName().equals(getDefaultName())
 	 */
+	@Model @Raw
 	private void setName(String name) {
 		if (isValidName(name)) {
 			this.name = name;
@@ -103,6 +104,7 @@ public class FileSystem {
 	 * @return	A valid file name.
 	 * 			| isValidName(result)
 	 */
+	@Model
 	private static String getDefaultName() {
 		return "new_fileSystem";
 	}
@@ -112,6 +114,7 @@ public class FileSystem {
 	/**
 	 * Return the name of this filesystem.
 	 */
+	@Basic @Raw
 	public String getName() {
 		return name;
 	}
@@ -174,6 +177,7 @@ public class FileSystem {
 	 * 			this filesystem.
 	 * 			| new.isWritable() == isWritable
 	 */
+	@Raw
 	public void setWritable(boolean isWritable) {
 		this.isWritable = isWritable;
 	}
@@ -197,6 +201,7 @@ public class FileSystem {
 	 * 			The new directory reference.
 	 *  
 	 */
+	@Raw @Model
 	void setDir(Directory dir) {
 		this.dir = dir;
 	}
@@ -205,6 +210,7 @@ public class FileSystem {
 	/**
 	 * Return the directory reference of this filesystem.
 	 */
+	@Basic @Raw
 	public Directory getDir() {
 		return dir;
 	}
@@ -350,6 +356,7 @@ public class FileSystem {
  * 		   If a filesystem is a root filesystem than the filesystem itself 
  * 		   gets returned.
  */
+@Basic @Raw
 public FileSystem getRoot() {
 	if (dir == null) {
 		return this;
@@ -490,7 +497,6 @@ public void setDelete(boolean isDeleted) {
  * 			if the filesystem has not already been deleted
  * 			| if (this.isDeleted() == false)
  * 			| then (ref.remove(this) && this.setDelete(true))
- * 
  * @throws	AlreadyDeletedException(this)
  *			The filesystem has already been deleted.
  *			| this.isDeleted() == true

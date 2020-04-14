@@ -84,6 +84,7 @@ public class Directory extends FileSystem{
 	 /**
 	  * Return the list of this directory.
 	  */
+	@Basic @Raw
 	public List<FileSystem> getList(){
 		return list;
 	}
