@@ -307,8 +307,35 @@ public void testForMove_AlreadyExists() {
 	settings.move(local);
 }
 
+@Test
+public void testForIsDeleted_LegalCaseA() {
+	assertFalse(MyOS.isDeleted()); 
+}
 
+@Test
+public void testForIsDeleted_LegalCaseB() {
+	FileSystem MyOSPrevious = new FileSystem("MyOSVersion0", null, false); 
+	MyOSPrevious.setDelete(true);
+	assertTrue(MyOSPrevious.isDeleted()); 
+	
+}
 
+@Test
+public void testDelete_Legalcase() {
+	FileSystem Obsolete = new FileSystem("obsolete", MyDirectory, false);
+	Directory root = Obsolete.getDir(); 
+	Obsolete.delete();
+	assertFalse(root.getList().contains(Obsolete)); 
+}
+
+@Test (expected= AlreadyDeletedException.class)
+public void testDelete_IllegalCase() {
+	FileSystem Obsolete = new FileSystem("obsolete", MyDirectory, false);
+	Obsolete.delete();
+	sleep(); //make sure to wait after the filesystem has been deleted
+	Obsolete.delete();	
+	
+}
 private void sleep() {
     try {
         Thread.sleep(50);
