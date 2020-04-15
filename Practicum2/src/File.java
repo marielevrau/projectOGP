@@ -14,8 +14,7 @@ import java.util.Date;
  * @invar 	Each file must have a valid type.
  * 			| isValidType(getType())
  * 
- * @author  Mark Dreesen
- * @author  Tommy Messelis
+ * @author  Jérôme D'hulst, Marie Levrau, Art Willems
  * @version 3.1
  * 
  * @note		See Coding Rule 48 for more info on the encapsulation of class invariants.
@@ -200,8 +199,9 @@ public class File extends FileSystem {
      *          | delta > 0
      * @effect  The size of this file is increased with the given delta.
      *          | changeSize(delta)
+     *          
      */
-    public void enlarge(int delta) throws FileNotWritableException {
+    public void enlarge(int delta) throws FileSystemNotWritableException {
         changeSize(delta);
     }
 
@@ -216,7 +216,7 @@ public class File extends FileSystem {
      * @effect  The size of this file is decreased with the given delta.
      *          | changeSize(-delta)
      */
-    public void shorten(int delta) throws FileNotWritableException {
+    public void shorten(int delta) throws FileSystemNotWritableException {
         changeSize(-delta);
     }
 
@@ -232,17 +232,17 @@ public class File extends FileSystem {
      *         | setSize(getSize()+delta)
      * @effect The modification time is updated.
      *         | setModificationTime()
-     * @throws FileNotWritableException(this)
+     * @throws FileSystemNotWritableException(this)
      *         This file is not writable.
      *         | ! isWritable()
      */
     @Model 
-    private void changeSize(int delta) throws FileNotWritableException{
+    private void changeSize(int delta) throws FileSystemNotWritableException{
         if (isWritable()) {
             setSize(getSize()+delta);
             setModificationTime();            
         }else{
-        	throw new FileNotWritableException(this);
+        	throw new FileSystemNotWritableException(this);
         }
     }
 
@@ -253,10 +253,14 @@ public class File extends FileSystem {
      * type
      **********************************************************/
     
-    
+	/**
+	 * A list that contains the different sorts of types of a file.
+	 */
     public static List<String> typeList = new ArrayList<String>(Arrays.asList("txt","java","pdf"));
 
-    
+	/**
+	 * Variable referencing the type of this file.
+	 */
     public String type = null;
     
     /**
@@ -310,20 +314,6 @@ public class File extends FileSystem {
     	return type;
     }
     
-    
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 }

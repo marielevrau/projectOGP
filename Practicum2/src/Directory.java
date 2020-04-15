@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * A class of directories.
+ * 
+* @author Jérôme D'hulst, Marie Levrau, Art Willems
+*/
 public class Directory extends FileSystem{
 	
 	
@@ -61,24 +66,13 @@ public class Directory extends FileSystem{
 	
 	
 	/**********************************************************
-     * list of subfiles and sub-directories
+     * list of subfiles and subdirectories
      **********************************************************/
 	
 	/**
 	 * A list that contains the objects from filesystem as its subfiles/subdirectories.
 	 */
 	public List<FileSystem> list = new ArrayList<FileSystem>();
-	
-	
-	
-	
-	public FileSystem sortListLexicograhpic(List<FileSystem> list, int l, int r){
-		if(l < r) {
-			int middle = (l + r) / 2;
-			FileSystem leftList = sortListLexicograhpic(list, l, middle);
-			FileSystem rightList = sortListLexicograhpic(list, middle + 1, r); 
-		}
-	}
 	
 	
 	 /**
@@ -91,11 +85,11 @@ public class Directory extends FileSystem{
 	
 	
 	/**
-	 * Return the sub-directory or subfile with given index in the directory list.
+	 * Return the subdirectory or subfile with given index in the directory list.
 	 * 
 	 * @param	index
 	 * 			The index in the directory list.
-	 * @return	the sub-directory or subfile with given index in the directory list.
+	 * @return	the subdirectory or subfile with given index in the directory list.
 	 * @throws	IndexOutOfRangeException(this)
 	 *			The given index is out of range.
 	 *			| (index >= list.size()) || (list.size() == 0 )
@@ -113,11 +107,11 @@ public class Directory extends FileSystem{
 	
 	
 	/**
-	 * Return the sub-directory or subfile with given name.
+	 * Return the subdirectory or subfile with given name.
 	 * 
 	 * @param	name
 	 * 			The name in the directory list. 
-	 * @return	the sub-directory or subfile with given name.
+	 * @return	the subdirectory or subfile with given name.
 	 * @throws	NotInListException(this)
 	 *			The given name is not in the list of this directory.
 	 *			| ! this.exists(name)
@@ -194,7 +188,7 @@ public class Directory extends FileSystem{
 	
 	
 	/**
-	 * Return the amount of subfiles and sub-directories in this directory.
+	 * Return the amount of subfiles and subdirectories in this directory.
 	*/
 	public int getNbItems() {
 		return this.list.size();
@@ -225,16 +219,16 @@ public class Directory extends FileSystem{
 	
 	
 	/**
-	 * Check whether this directory is a direct or indirect sub-directory of the given directory.
+	 * Check whether this directory is a direct or indirect subdirectory of the given directory.
 	 * 
 	 * @param	directory
 	 * 			The given directory.
-	 * @return	True if and only if this directory is a direct or indirect sub-directory of the given directory.
+	 * @return	True if and only if this directory is a direct or indirect subdirectory of the given directory.
 	 * @throws	IsRootDirectoryException(this)
 	 *			This directory is a root directory. 
 	 *			| (super.getRoot() == this)
 	 * @throws	NotDirectOrIndirectSubdirectoryException(this)
-	 *			This directory is not a direct or indirect sub-directory of the given directory. 
+	 *			This directory is not a direct or indirect subdirectory of the given directory. 
 	 *			| !(super.getRoot() == this) && !(super.getRoot() == directory)
 	 *
 	 */
@@ -251,18 +245,6 @@ public class Directory extends FileSystem{
 		
 	}
 	
-	/**********************************************************
-     * Root and move
-     **********************************************************/
-	
-	
-	public void move(Directory dir) {
-		setModificationTime();
-		super.move(dir);
-		
-	}
-	
-	
 	
 	/**********************************************************
      * delete
@@ -273,7 +255,7 @@ public class Directory extends FileSystem{
 	 * 
 	 * @effect	If the directory list is empty, this directory will be deleted.
 	 * 			| if (this.isListEmpty())
-	 * 			| then (super.delete() && this.setModificationTime())
+	 * 			| then (super.delete()) 
 	 *@throws	DirListNotEmptyException(this)
 	 *			The list of this directory is not empty.
 	 *			| ! this.isListEmpty()
@@ -282,7 +264,7 @@ public class Directory extends FileSystem{
 	public void delete() throws DirListNotEmptyException {
 		if (this.isListEmpty()) {
 			super.delete();
-			this.setModificationTime();
+			
 		}
 		else{ 
 			throw new DirListNotEmptyException(this);
@@ -307,11 +289,16 @@ public class Directory extends FileSystem{
 	 * @param 	fileS
 	 * 			The filesystem to be removed.
 	 * @post	The given filesystem has been removed from the the list of this directory.
+	 * @effect 	The modification time is updated.
+     *         	| setModificationTime()
 	 * @throws 	NotInListException(this)
-	 * 			The list of this directory does not contain the given filesystem
+	 * 			The list of this directory does not contain the given filesystem.
+	 * @throws 	FileSystemNotWritableException(this)
+	 * 			This directory is not writable.
+	 * 			| !(this.isWritable())
 	 * 			
 	 */
-	public void remove(FileSystem fileS) throws NotInListException, FileNotWritableException{
+	public void remove(FileSystem fileS) throws NotInListException, FileSystemNotWritableException{
 		if (this.isWritable()) {
 			if (this.list.contains(fileS)) {
 				list.remove(fileS);
@@ -324,16 +311,11 @@ public class Directory extends FileSystem{
 			}
 		}
 		else {
-			throw new FileNotWritableException(this);
+			throw new FileSystemNotWritableException(this);
 		}
 
 	}
 	
-   
-
-	
-	
-	
-	
+  
 	
 }

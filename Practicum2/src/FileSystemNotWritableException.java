@@ -1,12 +1,10 @@
-import be.kuleuven.cs.som.annotate.*;
-
 /**
- * A class for signaling illegal attempts to change a file.
+ * A class for signaling illegal attempts to change a filesystem.
  * 
- * @author 	Tommy Messelis
+ * @author 	Jérôme D'hulst, Marie Levrau, Art Willems
  * @version	2.1
  */
-public class FileNotWritableException extends RuntimeException {
+public class FileSystemNotWritableException extends RuntimeException {
 
 	/**
 	 * Required because this class inherits from Exception
@@ -29,7 +27,7 @@ public class FileNotWritableException extends RuntimeException {
 	 * 			| new.getFile() == filesystem
 	 */
 	@Raw
-	public FileNotWritableException(FileSystem FileSystem) {
+	public FileSystemNotWritableException(FileSystem FileSystem) {
 		this.FileSystem = FileSystem;
 	}
 	

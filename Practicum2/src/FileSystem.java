@@ -9,13 +9,13 @@ import be.kuleuven.cs.som.annotate.Raw;
 
 
 /**
- * @invar	Each file must have a properly spelled name.
+ * @invar	Each filesystem must have a properly spelled name.
  * 			| isValidName(getName())
- * @invar   Each file must have a valid creation time.
+ * @invar   Each filesystem must have a valid creation time.
  *          | isValidCreationTime(getCreationTime())
- * @invar   Each file must have a valid modification time.
+ * @invar   Each filesystem must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
- * @author Jérôme D'hulst
+ * @author 	JÃ©rÃ´me D'hulst, Marie Levrau, Art Willems
  *
  */
 public class FileSystem {
@@ -25,15 +25,15 @@ public class FileSystem {
 	 * Initialize a new filesystem with a given name, directory reference and writablilty.
 	 * 
 	 * @param	name
-	 * 			The name of the new file.
+	 * 			The name of the new filesystem.
 	 * @param 	dir
-	 * 			The directory reference of the new file.
+	 * 			The directory reference of the new filesystem.
 	 * @param 	writable
-	 * 			The writabilty of the new file.
-	 * @effect	The name of the file is set to the given name
+	 * 			The writabilty of the new filesystem.
+	 * @effect	The name of the filesystem is set to the given name
 	 * 			If the given name is not valid, a default name is set.
 	 * 			| setName(name)
-	 * @effect	The directory reference of the file is set to the given directory.
+	 * @effect	The directory reference of the filesystem is set to the given directory.
 	 * 			If the given directory is set to null then this file is root.
 	 * 			| setDir(dir)
 	 * @effect	The writability is set to the given flag.
@@ -131,16 +131,13 @@ public class FileSystem {
      * 			otherwise there is no change.
      * 			| if (isValidName(name) && isWritable())
      *          | then setName(name)
-     * @effect  If the name is valid and the fileSystem is writable, the modification time 
-     * 			of this filesystem is updated.
-     *          | if (isValidName(name) && isWritable())
-     *          | then setModificationTime()
-     * @throws  FileNotWritableException(this)
+     * @effect 	The modification time is updated.
+     *         	| setModificationTime()
+     * @throws  FileSystemNotWritableException(this)
      *          This filesystem is not writable
      *          | ! isWritable() 
      */
-	
-	public void changeName(String name) throws FileNotWritableException{
+	public void changeName(String name) throws FileSystemNotWritableException{
 		if (isWritable()) {
 			if(isValidName(name)) {
 				setName(name);
@@ -148,7 +145,7 @@ public class FileSystem {
 			}
 			}
 		else {
-			throw new FileNotWritableException(this);
+			throw new FileSystemNotWritableException(this);
 		}
 	}
 	
@@ -156,6 +153,7 @@ public class FileSystem {
 	/**********************************************************
      * writable
      **********************************************************/
+	
 	/**
 	 * Variable registering whether or not this filesystem is writable.
 	 */
@@ -215,11 +213,7 @@ public class FileSystem {
 		return dir;
 	}
 	
-	/*
-	public static boolean isValidFileSystem(FileSystem dir) {
-		return ()
-	}
-	*/
+
 	/**********************************************************
      * creationTime
      **********************************************************/
@@ -384,15 +378,18 @@ public FileSystem getRoot() {
  * 			of this filesystem is updated.
  *      	| if (isValidName(name) && isWritable())
  *      	| then setModificationTime()
+ * @throws 	FileSystemNotWritableException(this)
+ * 			This filesystem is not writable.
+ * 			| !(this.isWritable())      
  * 			
  */
-public void makeRoot() throws FileNotWritableException {
+public void makeRoot() throws FileSystemNotWritableException {
 	if (isWritable()) {
 		setModificationTime();
 		setDir(null);
 	}
 	else {
-		throw new FileNotWritableException(this);
+		throw new FileSystemNotWritableException(this);
 	}
 }
 
@@ -428,17 +425,34 @@ public int seekAlphabeticPosition(String name) {
 
 /**
  * 
+ * Inserts a given filesystem on a given position in the directory list.
  * 
  * @param position
  * @param file
+ * 
  */
 public void insertNewIntoDirectory(int position, FileSystem file) {
 	List<FileSystem> list = this.getDir().getList(); 
 	list.add(position, file);
 }
  
-	
-public void move(Directory dir) throws FileNotWritableException, AlreadyInListException{
+/**
+ * Move a given filesystem into the the list of this directory.
+ * 
+ * @param 	fileSystem
+ * 			The filesystem to be moved.
+ * @post	The given filesystem has been moved into the the list of this directory.
+ * 			| dir.insertNewIntoDirectory(pos, this)
+ * @effect 	The modification time is updated.
+ *         	| setModificationTime()
+ * @throws 	AlreadyInListException(this)
+ * 			The given filesystem is already in the list of this directory.
+ * 			| (dir.isWritable()) && (dir.exists(this.getName()))
+ * @throws 	FileSystemNotWritableException(this)
+ * 			The directory where this filesystem wants to move into, is not writable.
+ * 			| ! (dir.isWritable())			
+ */
+public void move(Directory dir) throws FileSystemNotWritableException, AlreadyInListException{
 		if (dir.isWritable()) {
 			if (dir.exists(this.getName())) {
 				throw new AlreadyInListException(this);
@@ -453,7 +467,7 @@ public void move(Directory dir) throws FileNotWritableException, AlreadyInListEx
 	
 
 		else {
-			throw new FileNotWritableException(dir);
+			throw new FileSystemNotWritableException(dir);
 			}
 	}
 
@@ -497,6 +511,8 @@ public void setDelete(boolean isDeleted) {
  * 			if the filesystem has not already been deleted
  * 			| if (this.isDeleted() == false)
  * 			| then (ref.remove(this) && this.setDelete(true))
+ * @effect 	The modification time is updated.
+ *         	| setModificationTime()
  * @throws	AlreadyDeletedException(this)
  *			The filesystem has already been deleted.
  *			| this.isDeleted() == true
@@ -506,6 +522,7 @@ public void delete() throws AlreadyDeletedException{
 		Directory ref = this.getDir();
     	ref.remove(this);
     	this.setDelete(true);	
+    	this.setModificationTime();
 	}
 	else {
 		throw new AlreadyDeletedException(this);	
