@@ -49,7 +49,7 @@ public class DirectoryTest {
 		timeBeforeCreationWritable = new Date(); 
 		DirJustName = new Directory("whatsinaname?"); 
 		timeAfterCreationWritable = new Date(); 
-		//if the directory name is invalid, will there be a new default name chosen? 
+		assertEquals("new_filesystem", DirJustName.getName()); 
 		assertTrue(DirJustName.isWritable()); 
 		assertEquals(null, DirJustName.getDir()); 
 		assertTrue(timeBeforeCreationWritable.before(DirJustName.getCreationTime())); 
@@ -75,7 +75,6 @@ public class DirectoryTest {
 		assertFalse(DirWritable.isValidName(DirWritable.getName())); 
 		assertEquals(InnerDir, DirWritable.getDir()); 
 		assertTrue(DirWritable.isWritable()); 
-		// is this the desired implementation? 
 		assertEquals("new_filesystem", DirWritable.getName()); 
 		assertNull(DirWritable.getModificationTime()); 
 		assertFalse(timeBeforeCreationWritable.after(DirWritable.getCreationTime())); 
@@ -146,7 +145,7 @@ public class DirectoryTest {
 		
 	}
 	
-	@Test (expected = FileNotWritableException.class)
+	@Test (expected = FileSystemNotWritableException.class)
 	public void testForMove_NotWritableException() {
 		DirJustName.move(DirFull);
 		assertEquals(DirFull, DirJustName.getDir()); 

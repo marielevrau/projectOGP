@@ -169,7 +169,7 @@ public void testChangeName_LegalCase() {
 	assertFalse(Documents.getModificationTime().after(timeAfterModify)); 
 }
 
-@Test (expected = FileNotWritableException.class)
+@Test (expected = FileSystemNotWritableException.class)
 public void testChangeName_IllegalCase(){
 	Downloads.changeName("Torrents");
 }
@@ -185,12 +185,6 @@ public void testSetWritable() {
 public void testMakeRoot() {
 	Documents.makeRoot();
 	assertEquals(null, Documents.getDir());
-}
-
-@Test
-public void testBin() {
- 
-
 }
 
 @Test
@@ -268,6 +262,13 @@ public void testOverLappingUsePeriod_Move() {
 	sleep(); 
 	second.move(Home);
 	assertTrue(first.hasOverlappingUsePeriod(second)); 
+	
+}
+
+@Test
+public void testSeekAlphabeticPosition() {
+	FileSystem SomeOtherFiles = new FileSystem("varia", MyDirectory, true); 
+	assertEquals(3, SomeOtherFiles.seekAlphabeticPosition(SomeOtherFiles.getName())); 
 }
 
 @Test
@@ -289,7 +290,7 @@ public void testForMove_LegalCase() {
 	
 }
 
-@Test (expected = FileNotWritableException.class)
+@Test (expected = FileSystemNotWritableException.class)
 public void testForMove_NotWritable() {
 	Directory Default = new Directory("Default", null, false);
 	FileSystem MyPreferences, Users; 
