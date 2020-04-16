@@ -28,7 +28,7 @@ public class IsRootDirectoryException extends RuntimeException{
 	 * 			is set to the given directory.
 	 * 			| new.getDirectory() == directory
 	 */
-	@raw
+	@Raw
 	public IsRootDirectoryException(Directory directory) {
 		this.directory = directory;
 	}

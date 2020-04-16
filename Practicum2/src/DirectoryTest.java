@@ -2,7 +2,6 @@
  *  A class with test function for public methods of the class Directory
  */
 package Practicum2.src;
-
 import java.util.*;
 import org.junit.*; 
 import static org.junit.Assert.*; 
