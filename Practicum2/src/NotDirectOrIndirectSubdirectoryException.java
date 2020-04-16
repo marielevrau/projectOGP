@@ -28,7 +28,7 @@ public class NotDirectOrIndirectSubdirectoryException extends RuntimeException{
 	 * 			is set to the given directory.
 	 * 			| new.getDirectory() == directory
 	 */
-	@raw
+	@Raw
 	public NotDirectOrIndirectSubdirectoryException(Directory directory) {
 		this.directory = directory;
 	}
