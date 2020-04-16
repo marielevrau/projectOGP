@@ -28,7 +28,7 @@ public class NotInListException extends RuntimeException {
 	 * 			is set to the given directory.
 	 * 			| new.getDirectory() == directory
 	 */
-	@raw
+	@Raw
 	public NotInListException(Directory directory) {
 		this.directory = directory;
 	}
