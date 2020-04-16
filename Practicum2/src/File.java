@@ -276,7 +276,7 @@ public class File extends FileSystem {
      * 			This is not a legal type.
      * 			| ! isValidType()
      */
-    @model
+    @Model
     private void setType(String type) throws IllegalTypeException{
     	if (isValidType(type)) {
     		this.type = type;
@@ -309,7 +309,7 @@ public class File extends FileSystem {
     /**
      * Return the type of this file.
      */
-    @basic @raw
+    @Basic @Raw
     public String getType() {
     	return type;
     }
