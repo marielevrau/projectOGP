@@ -1,3 +1,4 @@
+package Practicum2.src; 
 import static org.junit.Assert.*;
 import java.util.Date;
 
@@ -52,7 +53,7 @@ public class FileTest {
 		timeBeforeConstruction = new Date();
 		fileStringIntBoolean = new File(null, "$IllegalName$",File.getMaximumSize(),false, "pdf");
 		timeAfterConstruction = new Date();
-		assertFalse(File.isValidName(fileStringIntBoolean.getName()));
+		assertFalse(File.isValidName("$IllegalName$"));
 		assertTrue(fileStringIntBoolean.isValidType(fileStringIntBoolean.getType())); 
 		assertEquals(File.getMaximumSize(),fileStringIntBoolean.getSize());
 		assertFalse(fileStringIntBoolean.isWritable());
@@ -63,7 +64,7 @@ public class FileTest {
 
 	@Test
 	public void testFileString_LegalCase() {
-		assertEquals("bestand",fileString.getName());
+		assertEquals("bestand.txt",fileString.getName());
 		assertEquals("txt", fileString.getType()); 
 		assertEquals(0,fileString.getSize());
 		assertTrue(fileString.isWritable());
@@ -77,7 +78,7 @@ public class FileTest {
 		timeBeforeConstruction = new Date();
 		fileString = new File("$IllegalName$");
 		timeAfterConstruction = new Date();
-		assertFalse(File.isValidName(fileString.getName()));
+		assertFalse(File.isValidName("$IllegalName$"));
 		assertTrue(fileString.isValidType(fileString.getType())); 
 		assertEquals(0,fileString.getSize());
 		assertTrue(fileString.isWritable());
@@ -101,7 +102,7 @@ public class FileTest {
 	
 	@Test
 	public void testIsValidType_LegalCase() {
-		File file; 
+		File file = new File("file"); 
 		assertTrue(file.isValidType("txt")); 
 		assertTrue(file.isValidType("pdf")); 
 		assertTrue(file.isValidType("java")); 
@@ -109,7 +110,7 @@ public class FileTest {
 	
 	@Test
 	public void testIsValidType_IllegalCase() {
-		File file; 
+		File file = new File("file"); 
 		assertFalse(file.isValidType("py"));
 		assertFalse(file.isValidType("plist")); 
 	}
