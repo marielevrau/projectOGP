@@ -1,5 +1,4 @@
-package Practicum2.src;
-
+package Practicum2.src; 
 import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.List;
@@ -33,9 +32,12 @@ public class FileSystemTest{
 
   @Before
   public void setUpFixture(){
+	MyDirectory = new Directory("MyDirectory"); 
 	timeCreationBeforeConstruction = new Date();
+	sleep(); 
     MyFileSystem = new FileSystem("MyFileSystem", null, true);
     Documents = new FileSystem("Documents", MyDirectory, true);
+    sleep();
     timeCreationAfterConstruction = new Date();
 
     timeBeforeConstructionNotWritable = new Date();
@@ -50,22 +52,22 @@ public class FileSystemTest{
    assertEquals("Documents", Documents.getName());
    assertTrue(Documents.isWritable());
    assertEquals(MyDirectory, Documents.getDir());
-   assertTrue(Documents.isValidName("Documents"));
+   assertTrue(FileSystem.isValidName("Documents"));
    assertFalse(timeCreationBeforeConstruction.after(Documents.getCreationTime()));
    assertTrue(timeCreationAfterConstruction.after(Documents.getCreationTime()));
-   assertTrue(Documents.isValidCreationTime(Documents.getCreationTime()));
+   assertTrue(FileSystem.isValidCreationTime(Documents.getCreationTime()));
    assertNull(Documents.getModificationTime());
  }
 
 @Test
 public void extendedConstructorTestDocuments_IllegalCase(){
   timeCreationBeforeConstruction = new Date();
-  Documents = new FileSystem("Documents!%#", MyFileSystem.getDir(), true);
+  Documents = new FileSystem("Documents!%#", MyDirectory, true);
   timeCreationAfterConstruction = new Date();
-  assertFalse(Documents.isValidName(Documents.getName()));
+  assertTrue(FileSystem.isValidName(Documents.getName()));
   assertEquals(MyDirectory, Documents.getDir());
   assertTrue(Documents.isWritable());
-  assertTrue(Documents.isValidCreationTime(Documents.getCreationTime()));
+  assertTrue(FileSystem.isValidCreationTime(Documents.getCreationTime()));
   assertNull(Documents.getModificationTime());
   assertFalse(timeCreationBeforeConstruction.after(Documents.getCreationTime()));
 }
@@ -74,10 +76,10 @@ public void extendedConstructorTestDocuments_IllegalCase(){
 public void extendedConstructorTestDownloads_LegalCase(){
   assertEquals("Downloads", Downloads.getName());
   assertFalse(Downloads.isWritable());
-  assertTrue(Downloads.isValidName(Downloads.getName()));
+  assertTrue(FileSystem.isValidName(Downloads.getName()));
   assertEquals(MyDirectory, Downloads.getDir());
   assertNull(Downloads.getModificationTime());
-  assertTrue(Downloads.isValidCreationTime(Downloads.getCreationTime()));
+  assertTrue(FileSystem.isValidCreationTime(Downloads.getCreationTime()));
   assertFalse(timeBeforeConstructionNotWritable.after(Downloads.getCreationTime()));
   assertNull(Downloads.getModificationTime());
 }
@@ -87,12 +89,12 @@ public void extendedConstructorTestDownloads_IllegalCase(){
   timeBeforeConstructionNotWritable = new Date(); 
   Downloads = new FileSystem("Downloads§@", MyDirectory, false);
   timeAfterConstructionNotWritable = new Date(); 
-  assertFalse(Downloads.isValidName(Downloads.getName()));
-  assertEquals("new_filesystem", Downloads.getName()); 
+  assertTrue(FileSystem.isValidName(Downloads.getName()));
+  assertEquals("new_fileSystem", Downloads.getName()); 
   assertEquals(MyDirectory, Downloads.getDir()); 
   assertFalse(Downloads.isWritable()); 
-  assertTrue(Downloads.isValidCreationTime(Downloads.getCreationTime()));
-  assertFalse(timeAfterConstructionNotWritable.after(Downloads.getCreationTime()));
+  assertTrue(FileSystem.isValidCreationTime(Downloads.getCreationTime()));
+  assertFalse(timeAfterConstructionNotWritable.before(Downloads.getCreationTime()));
   
 }
 
@@ -112,7 +114,7 @@ public void extendedConstructorTestMyOS_IllegalCase() {
 	timeBeforeConstructionNotWritable = new Date();
 	MyOS = new FileSystem("TEmple!", null, false); 
 	timeAfterConstructionNotWritable = new Date(); 
-	assertEquals("new_filesystem", MyOS.getName()); 
+	assertEquals("new_fileSystem", MyOS.getName()); 
 	assertEquals(null, MyOS.getDir()); 
 	assertFalse(MyOS.isWritable());
 	assertNull(MyOS.getModificationTime()); 
@@ -137,7 +139,7 @@ public void extendedConstructorTestMyFilesystem_IllegalCase() {
 	timeCreationBeforeConstruction = new Date();
 	MyFileSystem = new FileSystem("Hard-drive", null, true);
 	timeCreationAfterConstruction = new Date(); 
-	assertEquals("new_filesystem", MyFileSystem.getName()); 
+	assertEquals("Hard-drive", MyFileSystem.getName()); 
 	assertTrue(MyFileSystem.isWritable());
 	assertEquals(null, MyFileSystem.getDir()); 
 	assertFalse(timeCreationBeforeConstruction.after(MyFileSystem.getCreationTime())); 
@@ -152,7 +154,7 @@ public void testForGetRoot_rootFile() {
 
 @Test
 public void testForGetRoot_notRootFile() {
-	assertNotEquals(Documents, Documents.getRoot()); 
+	assertNotEquals(MyFileSystem, Documents.getRoot()); 
 }
 
 @Test
@@ -161,9 +163,9 @@ public void testChangeName_LegalCase() {
 	Date timeBeforeModify = new Date(); 
 	Documents.changeName("Drive");
 	Date timeAfterModify = new Date(); 
-	assertEquals("Torrents", Documents.getName());
-	assertNotEquals(timeBeforeModify, timeBeforeConstructionNotWritable);
-	assertNotEquals(timeAfterModify, timeAfterConstructionNotWritable);
+	assertEquals("Drive", Documents.getName());
+	assertFalse(timeBeforeModify.after(timeBeforeConstructionNotWritable));
+	assertFalse(timeAfterModify.before(timeAfterConstructionNotWritable));
 	assertNotNull(Documents.getModificationTime()); 
 	assertFalse(timeBeforeModify.after(Documents.getModificationTime())); 
 	assertFalse(Documents.getModificationTime().after(timeAfterModify)); 
@@ -191,14 +193,13 @@ public void testMakeRoot() {
 public void testForIsValidName_legalcase() {
 	FileSystem validName = new FileSystem("validname", null, true); 
 	String FileSystemName = validName.getName();
-	assertTrue(validName.isValidName(FileSystemName)); 
+	assertTrue(FileSystem.isValidName(FileSystemName)); 
 }
 
 @Test
 public void testForIsValidName_IllegalCase() {
 	FileSystem notAValidName = new FileSystem("notç&valid", null, true);
-	String FileSystemName = notAValidName.getName(); 
-	assertFalse(notAValidName.isValidName(FileSystemName)); 
+	assertFalse(FileSystem.isValidName("notç&valid")); 
 }
 
 @Test
@@ -241,7 +242,7 @@ public void testHasOverlappingUsePeriod_ModifiedNameOverlap() {
 	FileSystem first, second;
 	first = new FileSystem("first", null, true); 
 	sleep(); 
-	second = new FileSystem("second", null, false); 
+	second = new FileSystem("second", null, true); 
 	
 	first.changeName("numberone");
 	sleep(); 
