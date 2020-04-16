@@ -1,7 +1,8 @@
+package Practicum2.src;
 /**
  *  A class with test function for public methods of the class Directory
  */
-package Practicum2.src;
+
 import java.util.*;
 import org.junit.*; 
 import static org.junit.Assert.*; 
@@ -13,8 +14,7 @@ import static org.junit.Assert.*;
  *
  */
 public class DirectoryTest {
-	
-
+	 
 	Directory DirJustName, DirWritable, DirFull; 
 	Directory OuterDir, InnerDir; 
 	Date timeBeforeCreationWritable, timeAfterCreationWritable;
@@ -22,6 +22,9 @@ public class DirectoryTest {
 	
 	@Before
 	public void setUpFixture() {
+		OuterDir = new Directory("OuterDir"); 
+		InnerDir = new Directory("InnerDir"); 
+		
 		timeBeforeCreationWritable = new Date();
 		DirJustName = new Directory("names");
 		DirWritable = new Directory(InnerDir, "writables"); 
@@ -38,8 +41,8 @@ public class DirectoryTest {
 		assertEquals("names", DirJustName.getName());
 		assertTrue(DirJustName.isWritable()); 
 		assertEquals(null, DirJustName.getDir()); 
-		assertTrue(timeBeforeCreationWritable.before(DirJustName.getCreationTime())); 
-		assertTrue(timeAfterCreationWritable.after(DirJustName.getCreationTime())); 
+		assertFalse(timeBeforeCreationWritable.after(DirJustName.getCreationTime())); 
+		assertFalse(timeAfterCreationWritable.before(DirJustName.getCreationTime())); 
 		assertNull(DirJustName.getModificationTime()); 
 	}
 	
@@ -48,11 +51,11 @@ public class DirectoryTest {
 		timeBeforeCreationWritable = new Date(); 
 		DirJustName = new Directory("whatsinaname?"); 
 		timeAfterCreationWritable = new Date(); 
-		assertEquals("new_filesystem", DirJustName.getName()); 
+		assertEquals("new_fileSystem", DirJustName.getName()); 
 		assertTrue(DirJustName.isWritable()); 
 		assertEquals(null, DirJustName.getDir()); 
-		assertTrue(timeBeforeCreationWritable.before(DirJustName.getCreationTime())); 
-		assertTrue(timeAfterCreationWritable.after(DirJustName.getCreationTime())); 
+		assertFalse(timeBeforeCreationWritable.after(DirJustName.getCreationTime())); 
+		assertFalse(timeAfterCreationWritable.before(DirJustName.getCreationTime())); 
 		assertNull(DirJustName.getModificationTime()); 
 	}
 	
@@ -61,8 +64,8 @@ public class DirectoryTest {
 		assertEquals("writables", DirWritable.getName()); 
 		assertEquals(InnerDir, DirWritable.getDir()); 
 		assertTrue(DirWritable.isWritable()); 
-		assertTrue(timeBeforeCreationWritable.before(DirWritable.getCreationTime())); 
-		assertTrue(timeAfterCreationWritable.after(DirWritable.getCreationTime())); 
+		assertFalse(timeBeforeCreationWritable.after(DirWritable.getCreationTime())); 
+		assertFalse(timeAfterCreationWritable.before(DirWritable.getCreationTime())); 
 		assertNull(DirWritable.getModificationTime()); 
 	}
 	
@@ -71,10 +74,10 @@ public class DirectoryTest {
 		timeBeforeCreationWritable = new Date();
 		DirWritable = new Directory(InnerDir, "%writables%"); 
 		timeAfterCreationWritable = new Date(); 
-		assertFalse(DirWritable.isValidName(DirWritable.getName())); 
+		assertTrue(FileSystem.isValidName(DirWritable.getName())); 
 		assertEquals(InnerDir, DirWritable.getDir()); 
 		assertTrue(DirWritable.isWritable()); 
-		assertEquals("new_filesystem", DirWritable.getName()); 
+		assertEquals("new_fileSystem", DirWritable.getName()); 
 		assertNull(DirWritable.getModificationTime()); 
 		assertFalse(timeBeforeCreationWritable.after(DirWritable.getCreationTime())); 
 		assertFalse(DirWritable.getCreationTime().after(timeAfterCreationWritable)); 
@@ -96,7 +99,7 @@ public class DirectoryTest {
 		timeBeforeCreationNotWritable = new Date(); 
 		DirFull = new Directory("directory#!", OuterDir, false);
 		timeAfterCreationNotWritable = new Date(); 
-		assertFalse(DirFull.isValidName(DirFull.getName())); 
+		assertTrue(Directory.isValidName(DirFull.getName())); 
 		assertEquals(OuterDir, DirFull.getDir()); 
 		assertFalse(timeBeforeCreationNotWritable.after(DirFull.getCreationTime())); 
 		assertFalse(DirFull.getCreationTime().after(timeAfterCreationNotWritable)); 
@@ -110,7 +113,7 @@ public class DirectoryTest {
 		assertTrue(InnerDir.isDirectOrIndirectSubdirectoryOf(OuterDir)); 
 	}
 	
-	@Test(expected = IsRootDirectoryException.class)
+	@Test (expected = IsRootDirectoryException.class)
 	public void testForIsDirectOrIndirectSubDirectoryOf_IllegalCaseNull() {
 		InnerDir = new Directory(null, "InnerDir"); 
 		assertFalse(InnerDir.isDirectOrIndirectSubdirectoryOf(OuterDir)); 
@@ -118,7 +121,7 @@ public class DirectoryTest {
 	
 	@Test (expected = NotDirectOrIndirectSubdirectoryException.class)
 	public void testForIsDirectOrIndirectSubDirectoryOf_IllegalCaseNoSub() {
-		assertFalse(DirJustName.isDirectOrIndirectSubdirectoryOf(DirFull)); 
+		assertFalse(DirFull.isDirectOrIndirectSubdirectoryOf(DirJustName)); 
 	}
 	@Test
 	public void testForGetList(){
@@ -128,10 +131,9 @@ public class DirectoryTest {
 		File SomeFile = new File(InnerDir, "ogp", 20, false, "java"); 
 		File AnotherFile = new File(DirFull, "p_and_o",45, false, "pdf"); 
 		List<FileSystem> ToCompare = new ArrayList<FileSystem>();
-		ToCompare.add(OuterDir); 
+		ToCompare.add(InnerDir);
 		ToCompare.add(DirFull);
 		ToCompare.add(AnotherFile);
-		ToCompare.add(InnerDir);
 		ToCompare.add(SomeFile); 
 		assertEquals(ToCompare, OuterDir.getList()); 
 	}
@@ -169,6 +171,7 @@ public class DirectoryTest {
 	public void testListEmpty_falseCase() {
 		Directory NotNullDirectory = new Directory("justanotherdirectory"); 
 		File File = new File(NotNullDirectory, "file", 35, true, "txt"); 
+		NotNullDirectory.getList().add(File); 
 		assertFalse(NotNullDirectory.isListEmpty()); 
 	}
 	
@@ -192,7 +195,7 @@ public class DirectoryTest {
 		assertTrue(OuterDir.hasAsItem(DirWritable)); 
 		
 	}
-	@After
+
 	
 	@Test (expected = NotInListException.class)
 	public void testCanHaveAsItem_Illegalcase() {
@@ -202,17 +205,16 @@ public class DirectoryTest {
 	@Test
 	public void testgetNbItems() {
 		InnerDir.setDir(OuterDir); 
-		assertEquals(3,OuterDir.getNbItems()); 
+		assertEquals(3, OuterDir.getNbItems()); 
 	}
-	@After
+
 	
 	@Test
 	public void testGetNbItems_null() {
 		Directory Empty = new Directory("empty"); 
 		assertEquals(0, Empty.getNbItems()); 
 	}
-	@After
-	
+
 	@Test
 	public void testGetItemAt_LegalCaseA() {
 		//testing the accessing of files within one directory 
@@ -222,7 +224,7 @@ public class DirectoryTest {
 		three = new File(DirWritable, "three", 9, true, "txt"); 
 		assertEquals(two, DirWritable.getItemAt(2)); 
 	}
-	@After 
+
 	
 	@Test (expected = IndexOutOfRangeException.class)
 	public void testGetItemAt_IllegalCaseA() {
@@ -232,7 +234,6 @@ public class DirectoryTest {
 		three = new File(DirWritable, "three", 9, true, "txt"); 
 		DirWritable.getItemAt(5); 
 	}
-	@After
 	
 	@Test
 	public void testGetItemAt_LegalCaseB() {
@@ -240,7 +241,6 @@ public class DirectoryTest {
 		InnerDir.setDir(OuterDir);
 		assertEquals(DirFull, OuterDir.getItemAt(0)); 
 	}
-	@After
 	
 	@Test (expected = IndexOutOfRangeException.class)
 	public void testGetItemAt_IllegalCaseB() {
@@ -256,7 +256,7 @@ public class DirectoryTest {
 		BeforeDirJustName = new File(InnerDir, "before", 10, true,"pdf"); 
 		assertEquals(1, InnerDir.getIndexOf(BeforeDirJustName.getName())); 
 	}
-	@After
+
 	
 	@Test(expected = NotInListException.class)
 	public void testGetIndexOf_IllegalCaseA() {
@@ -270,7 +270,6 @@ public class DirectoryTest {
 		InnerDir = new Directory("InnerDir", OuterDir, true);
 		assertEquals(2, OuterDir.getIndexOf("InnerDir")); 
 	}
-	@After
 	
 	@Test (expected = NotInListException.class)
 	public void testGetIndexOf_IllegalCaseB() {
