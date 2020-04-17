@@ -1,4 +1,4 @@
-package Practicum2.src;
+package Practicum2.src; 
 /**
  *  A class with test function for public methods of the class Directory
  */
@@ -14,7 +14,8 @@ import static org.junit.Assert.*;
  *
  */
 public class DirectoryTest {
-	 
+	
+	
 	Directory DirJustName, DirWritable, DirFull; 
 	Directory OuterDir, InnerDir; 
 	Date timeBeforeCreationWritable, timeAfterCreationWritable;
@@ -27,7 +28,7 @@ public class DirectoryTest {
 		
 		timeBeforeCreationWritable = new Date();
 		DirJustName = new Directory("names");
-		DirWritable = new Directory(InnerDir, "writables"); 
+		DirWritable = new Directory("writables", InnerDir, true); 
 		timeAfterCreationWritable = new Date(); 
 		
 		timeBeforeCreationNotWritable = new Date(); 
@@ -106,6 +107,11 @@ public class DirectoryTest {
 		assertNull(DirFull.getModificationTime());
 		
 	}
+	@Test
+	public void testSetDir() {
+		InnerDir.setDir(OuterDir);
+		assertEquals(OuterDir, InnerDir.getDir());
+	}
 	
 	@Test
 	public void testForIsDirectOrInDirectSubdirectoryOf_LegalCase() {
@@ -143,6 +149,7 @@ public class DirectoryTest {
 		DirJustName.move(DirWritable);
 		Directory dir = DirJustName.getDir(); 
 		assertEquals(DirWritable, dir); 
+		assertNotNull(DirJustName.getModificationTime()); 
 		
 	}
 	
@@ -150,13 +157,14 @@ public class DirectoryTest {
 	public void testForMove_NotWritableException() {
 		DirJustName.move(DirFull);
 		assertEquals(DirFull, DirJustName.getDir()); 
+		assertNull(DirJustName.getModificationTime()); 
 	}
 	
 	@Test (expected = AlreadyInListException.class)
 	public void testForMove_AlreadyInListException() {
 		DirJustName.move(null);
 		assertEquals(null, DirJustName.getDir()); 
-		
+		assertNull(DirJustName.getModificationTime()); 
 	}
 	
 	@Test
@@ -250,11 +258,10 @@ public class DirectoryTest {
 	@Test
 	public void testGetIndexOf_legalCaseA() {
 		//testing the accessing of files within directories
-		OuterDir = new Directory("OuterDir");
-		InnerDir = new Directory(OuterDir, "InnerDir"); 
+		InnerDir.setDir(OuterDir);; 
 		File BeforeDirJustName;
 		BeforeDirJustName = new File(InnerDir, "before", 10, true,"pdf"); 
-		assertEquals(1, InnerDir.getIndexOf(BeforeDirJustName.getName())); 
+		assertEquals(1, OuterDir.getIndexOf(BeforeDirJustName.getName())); 
 	}
 
 	
@@ -262,6 +269,7 @@ public class DirectoryTest {
 	public void testGetIndexOf_IllegalCaseA() {
 		File file = new File("file"); 
 		InnerDir.getIndexOf(file.getName()); 
+		
 	}
 	
 	@Test
