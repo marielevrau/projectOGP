@@ -182,6 +182,16 @@ public class DirectoryTest {
 		NotNullDirectory.getList().add(File); 
 		assertFalse(NotNullDirectory.isListEmpty()); 
 	}
+	@Test
+	public void testDirectoryContainsItself_falseCase() {
+		assertFalse(OuterDir.getList().contains(OuterDir)); 
+	}
+	
+	@Test
+	public void testDirectoryContainsItself_truecase() {
+		OuterDir = new Directory("OuterDir", OuterDir, true); 
+		assertTrue(OuterDir.getList().contains(OuterDir)); 
+	}
 	
 	@Test
 	public void testForRemove_LegalCase() {
@@ -285,7 +295,17 @@ public class DirectoryTest {
 		OuterDir.getIndexOf(DirNotInOuterDir.getName()); 
 	}
 	
+	@Test
+	public void testDeleteDirectory_LegalCase() {
+		DirWritable.delete();
+		assertFalse(InnerDir.getList().contains(DirWritable)); 
+	}
 	
+	@Test (expected = AlreadyDeletedException.class)
+	public void testDeleteDirectory_IllegalCase() {
+		DirWritable.setDelete(true);
+		DirWritable.delete();
+	}
 	
 	
 }
