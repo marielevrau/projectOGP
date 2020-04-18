@@ -126,7 +126,7 @@ public void extendedConstructorTestMyOS_IllegalCase() {
 public void extendedConstructorTestMyFileSystem_LegalCase() {
 	assertEquals("MyFileSystem", MyFileSystem.getName()); 
 	assertTrue(MyFileSystem.isWritable()); 
-	assertTrue(MyFileSystem.isValidCreationTime(MyFileSystem.getCreationTime())); 
+	assertTrue(FileSystem.isValidCreationTime(MyFileSystem.getCreationTime())); 
 	assertNull(MyFileSystem.getModificationTime());
 	assertEquals(null, MyFileSystem.getDir()); 
 	assertFalse(timeCreationBeforeConstruction.after(MyFileSystem.getCreationTime())); 
@@ -232,16 +232,17 @@ public void testHasOverlappingUsePeriod_NoOverlap() {
 public void testHasOverlappingUsePeriod_nullCase() {
 	FileSystem first, second; 
 	first = new FileSystem("first", null, true); 
-	sleep(); 
+	sleep(); // make sure that first.getCreationTime != second.getCreationTime()
 	second = null; 
 	assertFalse(first.hasOverlappingUsePeriod(second)); 
 }
 
 @Test
 public void testHasOverlappingUsePeriod_ModifiedNameOverlap() {
+	// make two new file systems "first" and "second"
 	FileSystem first, second;
 	first = new FileSystem("first", null, true); 
-	sleep(); 
+	sleep(); // make sure that first.getCreationTime()!= second.getCreationTime()
 	second = new FileSystem("second", null, true); 
 	
 	first.changeName("numberone");
@@ -253,11 +254,12 @@ public void testHasOverlappingUsePeriod_ModifiedNameOverlap() {
 
 @Test
 public void testOverLappingUsePeriod_Move() {
+	// make two new file systems first and second
 	FileSystem first, second;
 	first = new FileSystem("first", null, true); 
 	sleep();
 	second = new FileSystem("second", null, true); 
-	
+	// now move the file systems, but in a way that there is overlap between use periods. 
 	Directory Home = new Directory("Home", null, true);
 	first.move(Home);
 	sleep(); 
@@ -268,6 +270,7 @@ public void testOverLappingUsePeriod_Move() {
 
 @Test
 public void testSeekAlphabeticPosition() {
+	// make a new FileSystem with MyDirectory as directory. 
 	FileSystem SomeOtherFiles = new FileSystem("varia", MyDirectory, true); 
 	assertEquals(3, SomeOtherFiles.seekAlphabeticPosition(SomeOtherFiles.getName())); 
 }
@@ -293,6 +296,8 @@ public void testForMove_LegalCase() {
 
 @Test (expected = FileSystemNotWritableException.class)
 public void testForMove_NotWritable() {
+	// make a directory that is not writable for file systems called "Users" and "MyPreferences", trying to move these
+	//file systems will result in a FileSystemNotWritableException. 
 	Directory Default = new Directory("Default", null, false);
 	FileSystem MyPreferences, Users; 
 	MyPreferences = new FileSystem("Preferences", null, true);
@@ -303,7 +308,9 @@ public void testForMove_NotWritable() {
 
 @Test (expected = AlreadyInListException.class)
 public void testForMove_AlreadyExists() {
-	Directory local = new Directory("local", null, true); 
+	// make a new directory local and set the directory of a file system called settings to it. Try to move settings to local
+	// will result in AlreadyInListException. 
+	Directory local = new Directory("local", MyDirectory, true); 
 	FileSystem settings; 
 	settings = new FileSystem("settings", local, true); 
 	settings.move(local);
@@ -316,6 +323,7 @@ public void testForIsDeleted_LegalCaseA() {
 
 @Test
 public void testForIsDeleted_LegalCaseB() {
+	//make a new filesystem and set its status to delete. Check if it is indeed deleted. 
 	FileSystem MyOSPrevious = new FileSystem("MyOSVersion0", null, false); 
 	MyOSPrevious.setDelete(true);
 	assertTrue(MyOSPrevious.isDeleted()); 
@@ -324,6 +332,7 @@ public void testForIsDeleted_LegalCaseB() {
 
 @Test
 public void testDelete_Legalcase() {
+	// make a new filesystem that is not empty, add a directory to it and delete the directory. 
 	FileSystem Obsolete = new FileSystem("obsolete", MyDirectory, false);
 	Directory root = Obsolete.getDir(); 
 	Obsolete.delete();
@@ -338,6 +347,7 @@ public void testDelete_IllegalCase() {
 	Obsolete.delete();	
 	
 }
+
 private void sleep() {
     try {
         Thread.sleep(50);
