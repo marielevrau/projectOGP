@@ -338,7 +338,7 @@ public class Directory extends FileSystem{
 	 *			|	(this.getList().contains(this) || this.getList().contains(null))
 	 */
 	public boolean isValidList() {
-		return (this.getList().contains(this) || this.getList().contains(null));
+		return (this.exists(this.getName()) || this.getList().contains(null));
 	}
 	
 	/**
@@ -350,7 +350,7 @@ public class Directory extends FileSystem{
 	 * 			| fileSystem != null || fileSystem != this)
 	 */
 	public boolean isValidFileSystem(FileSystem fileSystem) {
-		return (fileSystem != null || fileSystem != this);
+		return (fileSystem != null || fileSystem.getName() != this.getName());
 	}
 	
 }
