@@ -299,14 +299,22 @@ public class Directory extends FileSystem{
 	 * @throws 	FileSystemNotWritableException(this)
 	 * 			This directory is not writable.
 	 * 			| !(this.isWritable())
-	 * 			
+	 * @throws 	FileSystemInvalidException(this)
+	 * 			The given filesystem is invalid.
+	 * 			| !(this.isValidFileSystem(fileS))		
 	 */
-	public void remove(FileSystem fileS) throws NotInListException, FileSystemNotWritableException{
+	public void remove(FileSystem fileS) throws NotInListException, FileSystemNotWritableException,FileSystemInvalidException{
 		if (this.isWritable()) {
 			if (this.list.contains(fileS)) {
-				list.remove(fileS);
-				fileS.setDir(null);
-				this.setModificationTime();
+				if (this.isValidFileSystem(fileS)){
+					list.remove(fileS);
+					fileS.setDir(null);
+					this.setModificationTime();
+				}
+				else {
+					throw new FileSystemInvalidException(this);
+				}
+				
 			}
 	
 			else {

@@ -462,9 +462,12 @@ public void insertNewIntoDirectory(int position, FileSystem file) {
  * 			| (dir.isWritable()) && (dir.exists(this.getName()))
  * @throws 	FileSystemNotWritableException(this)
  * 			The directory where this fileSystem wants to move into, is not writable.
- * 			| ! (dir.isWritable())			
+ * 			| ! (dir.isWritable())	
+ * @throws 	FileSystemInvalidException(this)
+ * 			This filesystem is invalid.
+ * 			| ! (dir.isValidFileSystem(this))			
  */
-public void move(Directory dir) throws FileSystemNotWritableException, AlreadyInListException, InvalidFileSystemException{
+public void move(Directory dir) throws FileSystemNotWritableException, AlreadyInListException, FileSystemInvalidException{
 		if (dir.isWritable()) {
 			if (dir.exists(this.getName())) {
 				throw new AlreadyInListException(this);
@@ -477,7 +480,7 @@ public void move(Directory dir) throws FileSystemNotWritableException, AlreadyIn
 					dir.setModificationTime();
 				}
 				else {
-					throw new InvalidFileSystemException(this);
+					throw new FileSystemInvalidException(this);
 				}
 			}
 		}	
