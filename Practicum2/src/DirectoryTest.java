@@ -1,7 +1,7 @@
 /**
  *  A class with test function for public methods of the class Directory
  */
-
+package Practicum2.src; 
 import java.util.*;
 import org.junit.*; 
 import static org.junit.Assert.*; 
@@ -128,6 +128,7 @@ public class DirectoryTest {
 	public void testForIsDirectOrIndirectSubDirectoryOf_IllegalCaseNoSub() {
 		assertFalse(DirFull.isDirectOrIndirectSubdirectoryOf(DirJustName)); 
 	}
+	
 	@Test
 	public void testForGetList(){
 		// initialise some files and directories and add them to an empty Arraylist
@@ -135,7 +136,7 @@ public class DirectoryTest {
 		OuterDir = new Directory("OuterDir", null, true); 
 		InnerDir = new Directory("InnerDir",OuterDir, false); 
 		File SomeFile = new File(InnerDir, "ogp", 20, false, "java"); 
-		File AnotherFile = new File(DirFull, "p_and_o",45, false, "pdf"); 
+		File AnotherFile = new File(DirFull, "p_and_o",45, false, "pdf");
 		List<FileSystem> ToCompare = new ArrayList<FileSystem>();
 		ToCompare.add(InnerDir);
 		ToCompare.add(DirFull);
@@ -191,6 +192,7 @@ public class DirectoryTest {
 		OuterDir = new Directory("OuterDir", OuterDir, true); 
 		assertFalse(OuterDir.isValidList()); 
 	}
+	
 	@Test
 	public void testIsValidFileSystem_LegalCase() {
 		FileSystem valid = new FileSystem("valid", DirWritable, true); 
@@ -283,7 +285,7 @@ public class DirectoryTest {
 	public void testGetItemAt_LegalCaseB() {
 		//testing the accessing of directories within directories
 		InnerDir.setDir(OuterDir);
-		assertEquals(DirFull, OuterDir.getItemAt(0)); 
+		assertEquals(DirFull, OuterDir.getItemAt(1)); 
 	}
 	
 	@Test (expected = IndexOutOfRangeException.class)
