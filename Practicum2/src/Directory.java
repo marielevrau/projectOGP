@@ -352,7 +352,7 @@ public class Directory extends FileSystem{
 	 * 			is not the directory itself.
 	 * 			| fileSystem != null || fileSystem != this)
 	 */
-	public boolean isValidFileSystem(FileSystem fileSystem) throws FileSystemInvalidexception {
+	public boolean isValidFileSystem(FileSystem fileSystem) throws FileSystemInvalidException {
 		if(fileSystem != null || fileSystem.getName() != this.getName()) {
 			return true; 
 		}
