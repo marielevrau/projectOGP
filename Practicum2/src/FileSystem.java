@@ -218,6 +218,8 @@ public class FileSystem {
 	@Raw @Model
 	void setDir(Directory dir) {
 		this.dir = dir;
+		this.move(dir);
+		
 	}
 	
 	
