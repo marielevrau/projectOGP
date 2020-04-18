@@ -337,11 +337,8 @@ public class Directory extends FileSystem{
 	 *			| result == 
 	 *			|	(this.getList().contains(this) || this.getList().contains(null))
 	 */
-	public boolean isValidList() throws FileSystemInvalidException {
-		if(this.exists(this.getName()) || this.getList().contains(null)) {
-			return true; 
-		}
-		throw new FileSystemInvalidException(this); 
+	public boolean isValidList() {
+		return(this.exists(this.getName()) || this.getList().contains(null)); 
 	}
 	
 	/**
@@ -352,11 +349,9 @@ public class Directory extends FileSystem{
 	 * 			is not the directory itself.
 	 * 			| fileSystem != null || fileSystem != this)
 	 */
-	public boolean isValidFileSystem(FileSystem fileSystem) throws FileSystemInvalidException {
-		if(fileSystem != null || fileSystem.getName() != this.getName()) {
-			return true; 
-		}
-		throw new FileSystemInvalidException(this); 
-	}
+	public boolean isValidFileSystem(FileSystem fileSystem) {
+		return(fileSystem != null || fileSystem.getName() != this.getName()); 
 	
+}
+
 }
