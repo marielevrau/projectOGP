@@ -5,6 +5,9 @@ import java.util.List;
 /**
  * A class of directories.
  * 
+ * @invar	Each directory must have a valid list.
+ * 			| isValidList(getList())
+ * 
 * @author Jérôme D'hulst, Marie Levrau, Art Willems
 */
 public class Directory extends FileSystem{
@@ -317,5 +320,29 @@ public class Directory extends FileSystem{
 	}
 	
   
+	
+	/**
+	 * Check whether the list of this directory is a valid list.
+	 * 
+	 *@return	True if the the list does not contain any null objects
+	 *			or the object itself.
+	 *			| result == 
+	 *			|	(this.getList().contains(this) || this.getList().contains(null))
+	 */
+	public boolean isValidList() {
+		return (this.getList().contains(this) || this.getList().contains(null));
+	}
+	
+	/**
+	 * Check whether an object can be inserted into a directory list.
+	 * @param 	fileSystem
+	 * 			The fileSystem to be checked.
+	 * @return	True if the fileSystem is not a null object or the fileSystem
+	 * 			is not the directory itself.
+	 * 			| fileSystem != null || fileSystem != this)
+	 */
+	public boolean isValidFileSystem(FileSystem fileSystem) {
+		return (fileSystem != null || fileSystem != this);
+	}
 	
 }
