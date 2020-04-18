@@ -1,4 +1,4 @@
-package Practicum2.src; 
+ 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,25 +16,25 @@ import be.kuleuven.cs.som.annotate.Raw;
  *          | isValidCreationTime(getCreationTime())
  * @invar   Each filesystem must have a valid modification time.
  *          | canHaveAsModificationTime(getModificationTime())
- * @author 	Jérôme D'hulst, Marie Levrau, Art Willems
+ * @author 	Jerome D'hulst, Marie Levrau, Art Willems
  *
  */
 public class FileSystem {
 	
 	
 	/**
-	 * Initialize a new filesystem with a given name, directory reference and writablilty.
+	 * Initialize a new fileSystem with a given name, directory reference and writabililty.
 	 * 
 	 * @param	name
-	 * 			The name of the new filesystem.
+	 * 			The name of the new fileSystem.
 	 * @param 	dir
-	 * 			The directory reference of the new filesystem.
+	 * 			The directory reference of the new fileSystem.
 	 * @param 	writable
-	 * 			The writabilty of the new filesystem.
-	 * @effect	The name of the filesystem is set to the given name
+	 * 			The writability of the new fileSystem.
+	 * @effect	The name of the fileSystem is set to the given name.
 	 * 			If the given name is not valid, a default name is set.
 	 * 			| setName(name)
-	 * @effect	The directory reference of the filesystem is set to the given directory.
+	 * @effect	The directory reference of the fileSystem is set to the given directory.
 	 * 			If the given directory is set to null then this file is root.
 	 * 			| setDir(dir)
 	 * @effect	The writability is set to the given flag.
@@ -54,13 +54,13 @@ public class FileSystem {
      **********************************************************/
 	
 	/**
-	 * Variable referencing the name of this filesystem.
+	 * Variable referencing the name of this fileSystem.
 	 */
 	private String name = null;
 	
 	
 	/**
-	 * Check whether the given name is a legal name for a filesystem.
+	 * Check whether the given name is a legal name for a fileSystem.
 	 * 
 	 * @param 	name
 	 * 			The name to be checked.
@@ -76,12 +76,12 @@ public class FileSystem {
 	
 	
 	/**
-	 * Set the name of this filesystem to the given name.
+	 * Set the name of this fileSystem to the given name.
 	 * 
 	 * @param	name
-	 * 			The new name for this filesystem.
-	 * @post	If the given name is valid, the name of this filesystem is set to the given name,
-	 * 			otherwise the name of this filesystem is set to a valid name (the default).
+	 * 			The new name for this fileSystem.
+	 * @post	If the given name is valid, the name of this fileSystem is set to the given name,
+	 * 			otherwise the name of this fileSystem is set to a valid name (the default).
 	 * 			| if (isValidName(name))
 	 * 			|		then new.getName().equals(name)
 	 * 			|		else new.getName().equals(getDefaultName())
@@ -100,13 +100,13 @@ public class FileSystem {
 	
 	
 	/**
-	 * Return the name for a new filesystem which is to be used when the
+	 * Return the name for a new fileSystem which is to be used when the
 	 * given name is not valid.
 	 * 
 	 * @return	A valid file name.
 	 * 			| isValidName(result)
 	 */
-	@Model
+	@Model 
 	private static String getDefaultName() {
 		return "new_fileSystem";
 	}
@@ -114,7 +114,7 @@ public class FileSystem {
 	
 	
 	/**
-	 * Return the name of this filesystem.
+	 * Return the name of this fileSystem.
 	 */
 	@Basic @Raw
 	public String getName() {
@@ -124,19 +124,19 @@ public class FileSystem {
 	
 	
 	/**
-     * Change the name of this filesystem to the given name.
+     * Change the name of this fileSystem to the given name.
      *
      * @param	name
-     * 			The new name for this filesystem.
-     * @effect  The name of this filesystem is set to the given name, 
-     * 			if this is a valid name and the filesystem is writable, 
+     * 			The new name for this fileSystem.
+     * @effect  The name of this fileSystem is set to the given name, 
+     * 			if this is a valid name and the fileSystem is writable, 
      * 			otherwise there is no change.
      * 			| if (isValidName(name) && isWritable())
      *          | then setName(name)
      * @effect 	The modification time is updated.
      *         	| setModificationTime()
      * @throws  FileSystemNotWritableException(this)
-     *          This filesystem is not writable
+     *          This fileSystem is not writable
      *          | ! isWritable() 
      */
 	public void changeName(String name) throws FileSystemNotWritableException{
@@ -170,11 +170,12 @@ public class FileSystem {
 
 	
 	/**
+	 * Set the writability of this file to the given writability.
 	 * 
 	 * @param 	isWritable
 	 * 			The new writability.
 	 * @post	The new given writablity is registered as the new writability for 
-	 * 			this filesystem.
+	 * 			this fileSystem.
 	 * 			| new.isWritable() == isWritable
 	 */
 	@Raw
@@ -189,17 +190,30 @@ public class FileSystem {
      **********************************************************/
 	
 	/**
-	 * An object of the class directory that refers to the directory where this file is 
-	 * located.
+	 * An object of the class directory that refers to the directory where
+	 * this fileSystem is located.
 	 */
 	private Directory dir = null;
 	
 	
 	/**
+	 * Return the directory reference of this fileSystem.
+	 */
+	@Basic @Raw
+	public Directory getDir() {
+		return dir;
+	}
+	
+	
+	
+	/**
+	 * Set the directory reference of this fileSystem to the given directory.
 	 * 
 	 * @param 	dir
 	 * 			The new directory reference.
-	 *  
+	 * @post	The new given directory is registered as the new directory reference for 
+	 * 			this fileSystem.
+	 * 			| new.getDir() == dir
 	 */
 	@Raw @Model
 	void setDir(Directory dir) {
@@ -207,13 +221,6 @@ public class FileSystem {
 	}
 	
 	
-	/**
-	 * Return the directory reference of this filesystem.
-	 */
-	@Basic @Raw
-	public Directory getDir() {
-		return dir;
-	}
 	
 
 	/**********************************************************
@@ -263,7 +270,7 @@ public class FileSystem {
    
     /**
      * Return the time at which this fileSystem was last modified, that is
-     * at which the filesystem was last changed. If this fileSysteem has
+     * at which the fileSystem was last changed. If this fileSysteem has
      * not yet been modified after construction, null is returned.
      */
     
@@ -346,10 +353,10 @@ public class FileSystem {
      * Root and move
      **********************************************************/
 /**
- * Returns the root of this filesystem.
+ * Returns the root of this fileSystem.
  * 
- * @return the filesystem that is the main reference of this filesystem.
- * 		   If a filesystem is a root filesystem than the filesystem itself 
+ * @return the fileSystem that is the main reference of this fileSystem.
+ * 		   If a fileSystem is a root fileSystem than the fileSystem itself 
  * 		   gets returned.
  */
 @Basic @Raw
@@ -372,16 +379,16 @@ public FileSystem getRoot() {
 
 
 /**
- * This filesystem becomes a root filesystem.
+ * This fileSystem becomes a root fileSystem.
  * 
- * @post	The directory reference of this filesystem is set to null.
+ * @post	The directory reference of this fileSystem is set to null.
  * 			| setDir(null)
  * @effect  If the name is valid and the fileSystem is writable, the modification time 
- * 			of this filesystem is updated.
+ * 			of this fileSystem is updated.
  *      	| if (isValidName(name) && isWritable())
  *      	| then setModificationTime()
  * @throws 	FileSystemNotWritableException(this)
- * 			This filesystem is not writable.
+ * 			This fileSystem is not writable.
  * 			| !(this.isWritable())      
  * 			
  */
@@ -397,12 +404,12 @@ public void makeRoot() throws FileSystemNotWritableException {
 
 
 /**
- * Return the correct index in the reference list to add this filesystem.
+ * Return the correct index in the reference list to add this fileSystem.
  * 
  * @param 	name
- * 			The name of the filesystem of which the correct position in
+ * 			The name of the fileSystem of which the correct position in
  * 			the list of its reference is needed. 
- * @return	the correct index in the list where this file is lexicographic in the right position.
+ * @return	the correct index in the list where this file is lexicographically in the right position.
  * 
  */
 public int seekAlphabeticPosition(String name) {
@@ -427,10 +434,12 @@ public int seekAlphabeticPosition(String name) {
 
 /**
  * 
- * Inserts a given filesystem on a given position in the directory list.
+ * Inserts a given fileSystem on a given position in the directory list.
  * 
- * @param position
- * @param file
+ * @param 	position
+ * 			The position where the fileSystem is inserted.
+ * @param 	file
+ * 			The fileSystem that is inserted into the directory list.
  * 
  */
 public void insertNewIntoDirectory(int position, FileSystem file) {
@@ -439,19 +448,20 @@ public void insertNewIntoDirectory(int position, FileSystem file) {
 }
  
 /**
- * Move a given filesystem into the the list of this directory.
+ * Move this fileSystem to the list of the given directory.
  * 
  * @param 	fileSystem
- * 			The filesystem to be moved.
- * @post	The given filesystem has been moved into the the list of this directory.
+ * 			The fileSystem to be moved.
+ * @post	This fileSystem has been moved into the the list of the given directory.
  * 			| dir.insertNewIntoDirectory(pos, this)
- * @effect 	The modification time is updated.
- *         	| setModificationTime()
+ * @effect 	The modification time of this fileSystem is updated as well as the modification time of the given directory.
+ *         	| this.setModificationTime()
+ *         	| dir.setModificationTime()
  * @throws 	AlreadyInListException(this)
- * 			The given filesystem is already in the list of this directory.
+ * 			The given fileSystem is already in the list of this directory.
  * 			| (dir.isWritable()) && (dir.exists(this.getName()))
  * @throws 	FileSystemNotWritableException(this)
- * 			The directory where this filesystem wants to move into, is not writable.
+ * 			The directory where this fileSystem wants to move into, is not writable.
  * 			| ! (dir.isWritable())			
  */
 public void move(Directory dir) throws FileSystemNotWritableException, AlreadyInListException{
@@ -462,12 +472,10 @@ public void move(Directory dir) throws FileSystemNotWritableException, AlreadyIn
 			else {
 				int pos = dir.seekAlphabeticPosition(this.getName());
 				dir.insertNewIntoDirectory(pos, this);
-				setModificationTime();
-				
-			}
+				this.setModificationTime();
+				dir.setModificationTime();
+				}
 		}	
-	
-
 		else {
 			throw new FileSystemNotWritableException(dir);
 			}
@@ -478,14 +486,14 @@ public void move(Directory dir) throws FileSystemNotWritableException, AlreadyIn
  * delete
  **********************************************************/
 /**
- * Variable registering whether or not this filesystem has been deleted.
+ * Variable registering whether or not this fileSystem has been deleted.
  */
 private boolean isDeleted = false;
 
 /**
- * Check whether this filesystem has been deleted.
+ * Check whether this fileSystem has been deleted.
  * 
- * @return	True if the filesystem has been deleted.
+ * @return	True if the fileSystem has been deleted.
  * 			| isDeleted
  */
 public boolean isDeleted() {
@@ -497,7 +505,7 @@ public boolean isDeleted() {
  * @param 	isDeleted
  * 			The new status of isDeleted.
  * @post	The new given status to isDeleted is registered as the new status to isDeleted for 
- * 			this filesystem.
+ * 			this fileSystem.
  * 			| new.isDeleted() == isDeleted
  */
 public void setDelete(boolean isDeleted) {
@@ -507,16 +515,16 @@ public void setDelete(boolean isDeleted) {
 
 /**
  * 
- * Delete this filesystem from the system.
+ * Delete this fileSystem from the system.
  * 
- * @effect	This filesystem has been deleted,
- * 			if the filesystem has not already been deleted
+ * @effect	This fileSystem has been deleted,
+ * 			if the fileSystem has not already been deleted
  * 			| if (this.isDeleted() == false)
  * 			| then (ref.remove(this) && this.setDelete(true))
  * @effect 	The modification time is updated.
  *         	| setModificationTime()
  * @throws	AlreadyDeletedException(this)
- *			The filesystem has already been deleted.
+ *			The fileSystem has already been deleted.
  *			| this.isDeleted() == true
  */
 public void delete() throws AlreadyDeletedException{

@@ -22,7 +22,7 @@ public class Directory extends FileSystem{
 	 * 			is a root 
 	 * @param	writable
 	 * 			The writability of the new directory.
-	 * @effect	This new directory is initialized as a filesystem with the given name,
+	 * @effect	This new directory is initialized as a fileSystem with the given name,
 	 * 			the given directory reference and the given writability
 	 * 			| super(name,dir,writable)
 	 */
@@ -70,7 +70,7 @@ public class Directory extends FileSystem{
      **********************************************************/
 	
 	/**
-	 * A list that contains the objects from filesystem as its subfiles/subdirectories.
+	 * A list that contains the objects from fileSystem as its subfiles/subdirectories.
 	 */
 	public List<FileSystem> list = new ArrayList<FileSystem>();
 	
@@ -107,7 +107,7 @@ public class Directory extends FileSystem{
 	
 	
 	/**
-	 * Return the subdirectory or subfile with given name.
+	 * Return the subdirectory or subfile with the given name.
 	 * 
 	 * @param	name
 	 * 			The name in the directory list. 
@@ -284,15 +284,15 @@ public class Directory extends FileSystem{
 	
 	
 	/**
-	 * Remove a filesystem from the list of this directory.
+	 * Remove a fileSystem from the list of this directory.
 	 * 
 	 * @param 	fileS
-	 * 			The filesystem to be removed.
-	 * @post	The given filesystem has been removed from the the list of this directory.
+	 * 			The fileSystem to be removed.
+	 * @post	The given fileSystem has been removed from the the list of this directory.
 	 * @effect 	The modification time is updated.
      *         	| setModificationTime()
 	 * @throws 	NotInListException(this)
-	 * 			The list of this directory does not contain the given filesystem.
+	 * 			The list of this directory does not contain the given fileSystem.
 	 * @throws 	FileSystemNotWritableException(this)
 	 * 			This directory is not writable.
 	 * 			| !(this.isWritable())

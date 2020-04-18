@@ -37,7 +37,7 @@ public class File extends FileSystem {
      *         	The writability of the new file.
      * @param 	type
      * 			The type of the new file.
-     * @effect	This new file is initialized as a filesystem with a given name, a given
+     * @effect	This new file is initialized as a fileSystem with a given name, a given
      * 			directory reference and a given writability.
      * 			| super(name,dir,writable)
      * @effect	The size is set to the given size (must be valid)
@@ -254,7 +254,7 @@ public class File extends FileSystem {
      **********************************************************/
     
 	/**
-	 * A list that contains the different sorts of types of a file.
+	 * A list that contains the different types of a file.
 	 */
     public static List<String> typeList = new ArrayList<String>(Arrays.asList("txt","java","pdf"));
 
