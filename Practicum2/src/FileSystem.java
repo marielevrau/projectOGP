@@ -1,4 +1,4 @@
- 
+package Practicum2.src; 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -476,7 +476,7 @@ public void move(Directory dir) throws FileSystemNotWritableException, AlreadyIn
 			}
 			else {
 				if (dir.isValidFileSystem(this)) {
-					int pos = dir.seekAlphabeticPosition(this.getName());
+					int pos = this.seekAlphabeticPosition(this.getName());
 					dir.insertNewIntoDirectory(pos, this);
 					this.setModificationTime();
 					dir.setModificationTime();

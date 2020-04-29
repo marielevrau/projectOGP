@@ -1,4 +1,4 @@
-package Practicum2.src; 
+import Practicum2.src.*; 
 import static org.junit.Assert.*;
 import java.util.Date;
 
