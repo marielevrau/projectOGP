@@ -29,8 +29,18 @@ public class IngredientType {
 	 * 			The state of the new ingredientType.
 	 * @param	standardTemperature
 	 * 			The standard temperature of the new ingredientType.
+	 * 
+	 * @effect  The name of the ingredient type is set to the given name.
+	 * 			If the given name is not valid, a default name is set.
+	 *          | setName(name) 
+	 * @effect  The state of the ingredient type is set to the given state.
+	 * 			If the given state is not valid, a default state is set.
+	 *          | setState(state) 
+	 * @effect  The standard temperature of the ingredient type is set to the given standard temperature.
+	 * 			If the given standard temperature is not valid, a default standard temperature is set.
+	 *          | setStandardTemperature(standard temperature) 	 
 	 */
-	public IngredientType(String name, String state, int[] standardTemperature) {
+	public IngredientType(String name, String state, int standardColdness,int standardHotness) {
 		setName(name);
 		setState(state);
 		setStandardTemperature(standardTemperature);
@@ -143,7 +153,7 @@ public class IngredientType {
      */
     @Raw @Model 
     private void setState(String state) {
-        if (isValidName(state)) {
+        if (isValidState(state)) {
         		this.state = state;
         } else {
         		this.state = getDefaultState();
@@ -165,7 +175,26 @@ public class IngredientType {
 	/**********************************************************
      * standardTemperature
      **********************************************************/
+    
+    /**
+	 * Variable referencing the standard hotness of this ingredientType.
+	 */
+	private int standardHotness = 20;
 	
+    /**
+	 * Variable referencing the standard coldness of this ingredientType.
+	 */
+	private int standardColdness = 0;
+	
+    /**
+     * Return the standard temperature of this ingredientType.
+     */
+    @Raw @Basic 
+    public int[] getStandardTemperature() {
+        return [standardHotness,standardColdness];
+    }
+    
+    /**VANAF HIER VERWIJDEREN**/
     /**
 	 * Variable referencing the standard temperature of this ingredientType.
 	 */
